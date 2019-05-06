@@ -5,9 +5,11 @@ using System.Text;
 
 namespace Manager.Interfaces
 {
-    public interface IEventManager
+    public interface IRouteManager
     {
-        void Emit(StationEmptiedEventArgs args);
+        event Action<Station> OnAirplaneMovedIn;
+        event Action<Station> OnAirplaneMovedOut;
+        void NotifyStationEmptied(StationEmptiedEventArgs args);
         void Subscribe(IStationService stationServ);
         void Unsubscribe(IStationService stationServ);
     }

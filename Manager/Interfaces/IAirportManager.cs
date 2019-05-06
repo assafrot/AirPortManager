@@ -7,8 +7,8 @@ namespace Manager.Interfaces
 {
     public interface IAirportManager
     {
+        IRouteManager RouteManager { get; set; }
         AirportState AirportState { get; set; }
-        event Action AirplaneMoved;
         void PushAirplane(Airplane airplane);
     }
 }

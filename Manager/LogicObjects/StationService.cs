@@ -3,31 +3,46 @@ using Manager.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Manager.LogicObjects
 {
     class StationService : IStationService
     {
 
-        public StationService(Station station, IEventManager eventManager)
+        public StationService(Station station, IRouteManager routeManager)
         {
-            _eventManager = eventManager;
+            _routeManager = routeManager;
             Station = station;
         }
-        IEventManager _eventManager;
 
-        public Station Station { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        IRouteManager _routeManager;
 
-        public void MoveIn(Airplane airplane)
+        public Station Station { get; set; }
+
+        public async void MoveIn(Airplane airplane)
         {
-            Station.Airplane = airplane;   
+            Station.Airplane = airplane;
+            await Timer();
+            _routeManager.Subscribe(this);
         }
 
-        public void MoveOut(IStationService station)
+        Task Timer()
         {
-            station.MoveIn(Station.Airplane);
+            return Task.Run(() =>
+            {
+                Random rnd = new Random();
+                Thread.Sleep(rnd.Next(3)+1 * 2000);
+            });
+        }
+
+        public void MoveOut(IStationService stationServ)
+        {
+            var airplaneToMove = Station.Airplane;
             Station.Airplane = null;
-            _eventManager.Emit(new StationEmptiedEventArgs(station));
+            stationServ.MoveIn(airplaneToMove);
+            _routeManager.NotifyStationEmptied(new StationEmptiedEventArgs(stationServ));
         }
 
     }
