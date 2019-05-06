@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Manager.Interfaces;
+using System.Collections.Generic;
 
 namespace Manager.Models
 {
@@ -8,6 +9,6 @@ namespace Manager.Models
         public bool IsEmpty { get => Airplane == null;}
         public bool EndPoint { get; set; }
         public bool StartPoint { get; set; }
-        public Dictionary<AirplaneActionType, Station[]> NextStations { get; set; }
+        public Dictionary<AirplaneActionType, List<IStationService>> NextStations { get; set; }
     }
 }
