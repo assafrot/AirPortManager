@@ -1,5 +1,10 @@
 <script>
-	export let name;
+	import AirplaneList from "./components/AirplaneList.svelte";
+	import NodeCanvas from "./components/NodeCanvas.svelte";
+	import {AirportService} from "./services/AirportService"
+
+	let airportService = new AirportService();
+
 </script>
 
 <style>
@@ -8,4 +13,6 @@
 	}
 </style>
 
-<h1>Hello {name}!</h1>
+<h1>== Airport ==</h1>
+
+<NodeCanvas ></NodeCanvas >
