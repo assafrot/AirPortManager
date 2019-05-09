@@ -7,6 +7,6 @@ namespace Manager.Models
     public class Airplane
     {
         public string Model { get; set; }
-        public AirplaneActionType ActionType { get; set; }
+        public FlightActionType ActionType { get; set; }
     }
 }

@@ -14,15 +14,15 @@ namespace Manager.LogicObjects
             AirportState = loader.Load();
             StartingStations = loader.GetStartingPoints(AirportState);
         }
-        Dictionary<AirplaneActionType, IStationService> StartingStations;
+        Dictionary<FlightActionType, IStationService> StartingStations;
         public IRouteManager RouteManager { get; set; }
 
         public AirportState AirportState { get; set; }
 
         public void PushAirplane(Airplane airplane)
         {
-           var startingStation = (StartStationService)StartingStations[airplane.ActionType];
-            startingStation.MoveIn(airplane); 
+            var startingStation = (StartStationService)StartingStations[airplane.ActionType];
+            startingStation.MoveIn(airplane);
         }
     }
 }

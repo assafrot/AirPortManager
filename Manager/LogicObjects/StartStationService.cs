@@ -21,15 +21,17 @@ namespace Manager.LogicObjects
 
         public void MoveIn(Airplane airplane)
         {
-            Queue.Enqueue(airplane);
-
-            if (waitingInQueue == false)
+            lock (Queue)
             {
-                _routeManager.Subscribe(this);
-                waitingInQueue = true;
+                Queue.Enqueue(airplane);
+                if (waitingInQueue == false)
+                {
+                    _routeManager.Subscribe(this);
+                    waitingInQueue = true;
+                }
             }
-
         }
+
 
         public void MoveOut(IStationService stationServ)
         {

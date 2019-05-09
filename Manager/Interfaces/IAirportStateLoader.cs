@@ -8,6 +8,6 @@ namespace Manager.Interfaces
     public interface IAirportStateLoader
     {
         AirportState Load();
-        Dictionary<AirplaneActionType, IStationService> GetStartingPoints(AirportState state);
+        Dictionary<FlightActionType, IStationService> GetStartingPoints(AirportState state);
     }
 }

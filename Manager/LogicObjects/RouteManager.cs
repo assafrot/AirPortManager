@@ -9,6 +9,10 @@ namespace Manager.LogicObjects
 {
     public class RouteManager : IRouteManager
     {
+        public RouteManager()
+        {
+            _stationQueue = new Dictionary<IStationService, QList<IStationService>>();
+        }
         private static RouteManager _instance;
         private Dictionary<IStationService, QList<IStationService>> _stationQueue;
 
