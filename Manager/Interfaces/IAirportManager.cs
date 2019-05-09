@@ -9,6 +9,6 @@ namespace Manager.Interfaces
     {
         IRouteManager RouteManager { get; set; }
         AirportState AirportState { get; set; }
-        void PushAirplane(Airplane airplane);
+        void PushAirplane(Flight airplane);
     }
 }

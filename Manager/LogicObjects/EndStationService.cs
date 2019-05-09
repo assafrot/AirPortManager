@@ -10,7 +10,7 @@ namespace Manager.LogicObjects
     {
         public Station Station { get; set; }
 
-        public void MoveIn(Airplane airplane)
+        public void MoveIn(Flight airplane)
         {
             
         }

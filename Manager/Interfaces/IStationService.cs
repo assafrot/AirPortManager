@@ -8,7 +8,7 @@ namespace Manager.Interfaces
     public interface IStationService
     {
         Station Station { get; set; }
-        void MoveIn(Airplane airplane);
+        void MoveIn(Flight airplane);
         void MoveOut(IStationService stationServ);
     }
 }

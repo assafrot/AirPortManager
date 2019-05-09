@@ -13,13 +13,13 @@ namespace Manager.LogicObjects
         {
             _routeManager = routeManager;
         }
-        public Queue<Airplane> Queue { get; set; }
+        public Queue<Flight> Queue { get; set; }
         IRouteManager _routeManager;
         public Station Station { get; set; }
 
         public bool waitingInQueue = false;
 
-        public void MoveIn(Airplane airplane)
+        public void MoveIn(Flight airplane)
         {
             lock (Queue)
             {

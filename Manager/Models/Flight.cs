@@ -6,7 +6,8 @@ namespace Manager.Models
 {
     public class Flight
     {
-        public Airplane Airplane { get; set; }
-        public DateTime ActionTime { get; set; }
+        public string Model { get; set; }
+        public FlightActionType ActionType { get; set; }
+        public DateTime PlannedTime { get; set; }
     }
 }

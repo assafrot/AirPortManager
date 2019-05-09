@@ -8,7 +8,7 @@ namespace Manager.Models
     {
         public DateTime Time { get; set; }
         public Station Station { get; set; }
-        public Airplane Airplane { get; set; }
+        public Flight Airplane { get; set; }
         public StationEventType EventType { get; set; }
     }
 }

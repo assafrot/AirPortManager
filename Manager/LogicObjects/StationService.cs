@@ -21,7 +21,7 @@ namespace Manager.LogicObjects
 
         public Station Station { get; set; }
 
-        public async void MoveIn(Airplane airplane)
+        public async void MoveIn(Flight airplane)
         {
             Station.Airplane = airplane;
             await Timer();

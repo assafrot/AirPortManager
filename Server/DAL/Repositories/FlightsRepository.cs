@@ -16,14 +16,14 @@ namespace Server.DAL.Repositories
 
         public IEnumerable<FlightDB> GetAllFutureLandings()
         {
-            return AirportContext.Flights.Where(f => f.Airplane.ActionType == FlightActionType.Landing 
-            &&  f.ActionTime >= DateTime.UtcNow);
+            return AirportContext.Flights.Where(f => f.ActionType == FlightActionType.Landing 
+            &&  f.PlannedTime >= DateTime.UtcNow);
         }
 
         public IEnumerable<FlightDB> GetAllFutureTakeOffs()
         {
-            return AirportContext.Flights.Where(f => f.Airplane.ActionType == FlightActionType.Takeoff
-            && f.ActionTime >= DateTime.UtcNow);
+            return AirportContext.Flights.Where(f => f.ActionType == FlightActionType.Takeoff
+            && f.PlannedTime >= DateTime.UtcNow);
         }
     }
 }

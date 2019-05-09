@@ -7,6 +7,6 @@ namespace Manager.Models
     public class AirportState
     {
         public List<Station> Stations { get; set; }
-        public Dictionary<FlightActionType, List<Airplane>> AirplanesInQueue { get; set; }
+        public Dictionary<FlightActionType, List<Flight>> AirplanesInQueue { get; set; }
     }
 }

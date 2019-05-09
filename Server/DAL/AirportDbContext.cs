@@ -11,7 +11,7 @@ namespace Server.DAL
     {
         public AirportDbContext(DbContextOptions<AirportDbContext> opts) : base(opts) {}
 
-        public DbSet<AirplaneDB> Airplanes { get; set; }
+        public DbSet<FlightDB> Airplanes { get; set; }
         public DbSet<StationDB> Stations { get; set; }
         public DbSet<StationEventDB> Events { get; set; }
         public DbSet<FlightDB> Flights { get; set; }

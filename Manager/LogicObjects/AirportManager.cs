@@ -19,7 +19,7 @@ namespace Manager.LogicObjects
 
         public AirportState AirportState { get; set; }
 
-        public void PushAirplane(Airplane airplane)
+        public void PushAirplane(Flight airplane)
         {
             var startingStation = (StartStationService)StartingStations[airplane.ActionType];
             startingStation.MoveIn(airplane);
