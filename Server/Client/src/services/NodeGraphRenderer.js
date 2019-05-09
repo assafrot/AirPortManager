@@ -5,17 +5,22 @@ export class NodeGraphRenderer {
 
   constructor(ctx) {
     this.ctx = ctx;
-    this.style = {};
+    this.style = {
+      connection:{
+        lineWidth: 2,
+        arrowSize: 15,
+        colors : {
+          AT_LANDING:"red",
+          AT_TAKEOFF:"blue"
+        } 
+      }
+    };
   }
 
   drawNodeGraph(graph) {
     this.ctx.clearRect(0, 0, 800, 600);
   
-    graph.nodes.forEach(node => {
-      node.connections.forEach(connection => {
-        this.drawConnection(node, connection);
-      });
-    })
+    this.drawConnections(graph);
   
     graph.nodes.forEach(node => {
       this.drawNode(node);  
@@ -25,20 +30,17 @@ export class NodeGraphRenderer {
 
   drawNode(node) {
     this.ctx.beginPath();
-    this.ctx.lineWidth = 2;
-    this.ctx.moveTo(node.x, node.y);
-  
     this.ctx.fillStyle = "grey";
     this.ctx.fillRect(node.x, node.y, node.width, node.height); 
     this.ctx.fill();
      
-    if(node.hovered) {
-      this.drawOutlineForNode(node);
-    }
+    // if(node.hovered) {
+    //   this.drawOutlineForNode(node);
+    // }
   
-    if(node.airplane) {
-      this.drawAirplaneInNode(node);
-    }
+    // if(node.airplane) {
+    //   this.drawAirplaneInNode(node);
+    // }
   }
 
   drawOutlineForNode(node) {
@@ -62,22 +64,50 @@ export class NodeGraphRenderer {
     this.ctx.fill();
   }
 
-  drawConnection(nodeFrom, connection) {
-    this.ctx.beginPath();
+  drawConnections(graph) {
+    
     let color;
-    let arrowSize = 10;
 
-    switch (connection.type) {
-      case AT_LANDING:
-        color = "red";
-        break;
+    graph.nodes.forEach(node => {
+      node.connections.forEach((connection) => {
+        this.drawConnection(node, connection, this.style.connection.colors[connection.type]);
+      });
+    })
+    // graph.nodes.forEach(node => {
+    //   node.connections.forEach((connection) => {
+    //     let ap = this.calcArrowPosition(node, connection.node, this.style.connection.arrowSize);
+    //     this.drawTriangle(ap, ap.dir * 90, this.style.connection.arrowSize, this.style.connection.colors[connection.type]);
+    //   });
+    // })
+
+    graph.generatedConnections.forEach(graphConnection => {
+      this.drawGraphConnection(graphConnection);
+    })
+
+  }
+
+  drawGraphConnection(graphConnection) {
+    
+
+
+    graphConnection.connections.forEach((connection,idx) => {
       
-      case AT_TAKEOFF:
-        color = "blue";
-        break;
-    }
+      let modifiedNodeFrom = {}
+      Object.assign(modifiedNodeFrom, graphConnection.nodeLeft);
+      modifiedNodeFrom.x -= (this.style.connection.lineWidth * idx)
+      
+      let modifiedNodeTo = {}
+      Object.assign( modifiedNodeTo, graphConnection.nodeRight);
+      modifiedNodeTo.y -= (this.style.connection.lineWidth * idx)
+      
+      this.drawConnection(modifiedNodeFrom, modifiedNodeTo, 
+        this.style.connection.colors[connection.type]);
+    })
+  }
 
-    let nodeTo = connection.node;
+  drawConnection(nodeFrom, nodeTo, color) {
+    this.ctx.beginPath();
+
     this.ctx.moveTo(nodeFrom.x + (nodeFrom.width / 2), 
                     nodeFrom.y + (nodeFrom.height / 2));
   
@@ -97,13 +127,36 @@ export class NodeGraphRenderer {
     this.ctx.lineTo(nodeTo.x + (nodeTo.width / 2), 
                     nodeTo.y + (nodeTo.height / 2));
     this.ctx.strokeStyle = color;
+    this.ctx.lineWidth = this.style.connection.lineWidth;
     this.ctx.stroke();
-
-    let ap = this.calcArrowPosition(nodeFrom, nodeTo, arrowSize);
-    
-    this.drawTriangle(ap, ap.dir * 90, arrowSize, color);
-
   }
+
+
+  drawTriangle(cPoint, angle = 0, size = 10, color = "black") {
+    angle = angle * 0.01745329 ;
+    this.ctx.beginPath();
+    this.ctx.fillStyle = color;
+    
+    let fp = {x: size/2, y: 0};
+    let fpX = this.rotateX(fp, angle); 
+    let fpY = this.rotateY(fp, angle); 
+    this.ctx.moveTo(cPoint.x+ fpX, cPoint.y + fpY);
+    
+    let sp = {x: -1*size/2, y: size/2};
+    let spX = this.rotateX(sp, angle); 
+    let spY = this.rotateY(sp, angle); 
+    this.ctx.lineTo(cPoint.x + spX, cPoint.y + spY);
+    
+    let tp = {x: -1*size/2, y: -1*size/2};
+    let tpX = this.rotateX(tp, angle); 
+    let tpY = this.rotateY(tp, angle); 
+    this.ctx.lineTo(cPoint.x + tpX, cPoint.y + tpY);
+
+    this.ctx.lineTo(cPoint.x + fpX, cPoint.y + fpY);
+
+    this.ctx.fill();
+  }
+
 
   calcArrowPosition(nodeFrom, nodeTo, arrowSize) {
 
@@ -177,30 +230,6 @@ export class NodeGraphRenderer {
   rotateY(point, angle) { return (point.x * Math.sin(angle)) + 
                                   point.y * Math.cos(angle)};
 
-  drawTriangle(cPoint, angle = 0, size = 10, color = "black") {
-    angle = angle * 0.01745329 ;
-    this.ctx.beginPath();
-    this.ctx.fillStyle = color;
-    
-    let fp = {x: size/2, y: 0};
-    let fpX = this.rotateX(fp, angle); 
-    let fpY = this.rotateY(fp, angle); 
-    this.ctx.moveTo(cPoint.x+ fpX, cPoint.y + fpY);
-    
-    let sp = {x: -1*size/2, y: size/2};
-    let spX = this.rotateX(sp, angle); 
-    let spY = this.rotateY(sp, angle); 
-    this.ctx.lineTo(cPoint.x + spX, cPoint.y + spY);
-    
-    let tp = {x: -1*size/2, y: -1*size/2};
-    let tpX = this.rotateX(tp, angle); 
-    let tpY = this.rotateY(tp, angle); 
-    this.ctx.lineTo(cPoint.x + tpX, cPoint.y + tpY);
-
-    this.ctx.lineTo(cPoint.x + fpX, cPoint.y + fpY);
-
-    this.ctx.fill();
-  }
 
 }
 
