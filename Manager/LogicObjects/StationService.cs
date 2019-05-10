@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Manager.LogicObjects
 {
-    class StationService : IStationService
+    public class StationService : IStationService
     {
 
         public StationService(Station station, IRouteManager routeManager)
@@ -33,7 +33,7 @@ namespace Manager.LogicObjects
             return Task.Run(() =>
             {
                 Random rnd = new Random();
-                Thread.Sleep(rnd.Next(3)+1 * 2000);
+                Thread.Sleep(rnd.Next(3)+1 * 200);
             });
         }
 
@@ -41,8 +41,8 @@ namespace Manager.LogicObjects
         {
             var airplaneToMove = Station.Airplane;
             Station.Airplane = null;
+            _routeManager.NotifyStationEmptied(new StationEmptiedEventArgs(this));
             stationServ.MoveIn(airplaneToMove);
-            _routeManager.NotifyStationEmptied(new StationEmptiedEventArgs(stationServ));
         }
 
     }

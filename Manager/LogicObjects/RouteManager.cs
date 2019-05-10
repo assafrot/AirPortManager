@@ -32,19 +32,18 @@ namespace Manager.LogicObjects
         public void NotifyStationEmptied(StationEmptiedEventArgs args)
         {
             var haveSubs = _stationQueue.TryGetValue(args.StationService, out var queue);
-
+            
             if (haveSubs && queue.Any())
             {
                 var stationServiceToNotify = queue.Dequeue();
                 Unsubscribe(stationServiceToNotify);
-                stationServiceToNotify.MoveOut(args.StationService);
 
+                stationServiceToNotify.MoveOut(args.StationService);
                 OnAirplaneMovedIn?.Invoke(args.StationService.Station);
                 OnAirplaneMovedOut?.Invoke(stationServiceToNotify.Station);
+               
             }
         }
-
-        
 
         public void Subscribe(IStationService stationServ)
         {
@@ -56,6 +55,8 @@ namespace Manager.LogicObjects
                     if (stationToSub.Station.IsEmpty)
                     {
                         stationServ.MoveOut(stationToSub);
+                        OnAirplaneMovedIn?.Invoke(stationToSub.Station);
+                        OnAirplaneMovedOut?.Invoke(stationServ.Station);
                         return;
                     }
                 }
@@ -69,7 +70,6 @@ namespace Manager.LogicObjects
            
         }
 
-
         public void Unsubscribe(IStationService stationServ)
         {
             var station = stationServ.Station;
@@ -79,14 +79,6 @@ namespace Manager.LogicObjects
                 _stationQueue[stationToUnsub].Remove(stationServ);
             });
         }
-
-
-
-
-
-
-
-
 
     }
 }

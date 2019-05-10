@@ -6,13 +6,21 @@ using System.Text;
 
 namespace Manager.LogicObjects
 {
-    class EndStationService : IStationService
+    public class EndStationService : IStationService
     {
+
+        public EndStationService(Station station, IRouteManager routeManager)
+        {
+            Station = station;
+            _routeManager = routeManager;
+        }
+
         public Station Station { get; set; }
+        IRouteManager _routeManager;
 
         public void MoveIn(Flight airplane)
         {
-            
+            _routeManager.NotifyStationEmptied(new StationEmptiedEventArgs(this));
         }
 
         public void MoveOut(IStationService stationServ)

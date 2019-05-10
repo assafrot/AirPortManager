@@ -4,30 +4,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Manager.LogicObjects
 {
-    class StartStationService : IStationService
+    public class StartStationService : IStationService
     {
-        public StartStationService(IRouteManager routeManager)
+        public StartStationService(Station station, IRouteManager routeManager)
         {
+            Station = station;
             _routeManager = routeManager;
         }
-        public Queue<Flight> Queue { get; set; }
+
+        public Queue<Flight> Queue { get; set; } = new Queue<Flight>();
         IRouteManager _routeManager;
         public Station Station { get; set; }
-
-        public bool waitingInQueue = false;
+        public bool GotAirplanesInQueue { get => Queue.Any();}
+        bool subToRouteManager = false;
 
         public void MoveIn(Flight airplane)
         {
             lock (Queue)
             {
                 Queue.Enqueue(airplane);
-                if (waitingInQueue == false)
+                if (subToRouteManager == false)
                 {
+                    subToRouteManager = true;
+                    Station.Airplane = airplane;
                     _routeManager.Subscribe(this);
-                    waitingInQueue = true;
                 }
             }
         }
@@ -35,19 +39,18 @@ namespace Manager.LogicObjects
 
         public void MoveOut(IStationService stationServ)
         {
-            if (Queue.Any())
+            if (GotAirplanesInQueue)
             {
                 var airplaneToMove = Queue.Dequeue();
                 stationServ.MoveIn(airplaneToMove);
 
-                if (Queue.Any())
+                if (GotAirplanesInQueue)
                 {
+                    Station.Airplane = Queue.Peek();
                     _routeManager.Subscribe(this);
-                    waitingInQueue = true;
-                }
-                else
+                } else
                 {
-                    waitingInQueue = false;
+                    subToRouteManager = false;
                 }
 
             }
