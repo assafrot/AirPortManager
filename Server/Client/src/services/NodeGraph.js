@@ -5,8 +5,20 @@ export class NodeGraph {
     this.nodes = [];
     this.cursor = {x : 0,y : 0};
     this.movingNodeIdx = -1;
-    this.generatedConnections = this.generateConnections();
-    this.nodeLineList = [];
+    this.nodeConnectionList = this.generateConnectionList();
+    this.connections = this.generateConnections();
+    this.style = {
+      connection:{
+        lineWidth: 4,
+        lineMargin: 10,
+        arrowSize: 20,
+        colors : {
+          border: "black",
+          AT_LANDING:"red",
+          AT_TAKEOFF:"blue"
+        } 
+      }
+    };
   }
 
   generateLines() {
@@ -42,15 +54,15 @@ export class NodeGraph {
     
   }
 
-  generateConnections() {
-    let gConnections = [];
+  generateConnectionList() {
+    let list = [];
 
     this.nodes.forEach((node, idx) => {
 
       node.connections.forEach(connection => {
         
         let cNodeIdx = this.nodes.indexOf(connection.node);
-        let gConnection = gConnections.find(con => con.nodeLeft == connection.node && con.nodeRight == node);
+        let gConnection = list.find(con => con.nodeLeft == connection.node && con.nodeRight == node);
 
         if(idx > cNodeIdx && gConnection) {
             
@@ -62,7 +74,7 @@ export class NodeGraph {
 
         } else {
             
-          gConnections.push({
+          list.push({
             nodeLeft: node, 
             nodeRight: connection.node, 
             connections: [{
@@ -76,47 +88,45 @@ export class NodeGraph {
 
     })});
 
-    return gConnections;
+    return list;
   }
 
-  getDir(nodeFrom, nodeTo) {
+  generateConnections() {
+    let connections = [];
+    this.nodeConnectionList.forEach(graphConnection => {
+      graphConnection.connections.forEach((connection,idx) => {
+        let dir = getDir(connection.from, connection.to);
+        let offset = this.calcOffset(idx, graphConnection.connections.length);
+        connections.push({
+        dir : dir
+        ,offset : offset
+        ,pointFrom : this.getConnectionPoint(connection.from, dir.from, offset)
+        ,pointTo : this.getConnectionPoint(connection.to, dir.to, offset)
+        ,color : this.style.connection.colors[connection.type]
+        })
+      })
+    })
 
-    let first = 0;
-    let second = 0;
-
-    if(nodeFrom.x > nodeTo.x) {
-      first = 2;
-    } else {
-      first = 0;
-    }
-
-    if(nodeFrom.y > nodeTo.y) {
-      second = 3;
-    } else {
-      second = 1;
-    }
-
-
-    if(Math.abs(nodeFrom.x - nodeTo.x) > 
-       Math.abs(nodeFrom.y - nodeTo.y)) {
-        return {from:first, to: second }
-      } else {
-        return {from:second, to: first }
-    }
-
+    return connections;
   }
 
   addNode(node) {
     this.nodes.push(node);
-    this.generatedConnections = this.generateConnections();
-    this.nodeLineList = this.generateLines();
+    this.nodeConnectionList = this.generateConnectionList();
+    this.connections = this.generateConnections();
+  }
+
+  addNodes(nodes) {
+    this.nodes.push(...nodes);
+    this.nodeConnectionList = this.generateConnectionList();
+    this.connections = this.generateConnections();
   }
   
   removeNode(node) {
     let idx = this.nodes.indexOf(node);
     this.nodes.splice(idx,1);
-    this.generatedConnections = this.generateConnections();
-    this.nodeLineList = this.generateLines();
+    this.nodeConnectionList = this.generateConnectionList();
+    this.connections = this.generateConnections();
   }
 
   onCursorPressed() {
@@ -143,9 +153,52 @@ export class NodeGraph {
     if(this.movingNodeIdx > -1) {
       this.nodes[this.movingNodeIdx].x += position.x - this.cursor.x;
       this.nodes[this.movingNodeIdx].y += position.y - this.cursor.y;
+      this.connections = this.generateConnections();
     }
     
     this.cursor = position;
+  }
+
+  calcOffset(idx, connectionCount) {
+    return (this.style.connection.lineWidth * ((-connectionCount / 2) + idx + 0.5)) +
+    (this.style.connection.lineMargin * (idx - 0.5))
+  }
+
+  getConnectionPoint(node, dir, offset) {
+    let lineWidth = this.style.connection.lineWidth;
+    switch(dir) {
+      case 0: 
+        return {x: node.x + node.width, y: node.y + (node.height / 2) + offset}
+        break;
+      case 1: 
+        return {x: node.x + (node.width / 2) + offset, y: node.y + node.height}
+        break;
+      case 2: 
+        return {x: node.x , y: node.y + (node.height / 2) + offset}
+        break;
+      case 3: 
+        return {x: node.x + (node.width / 2) + offset, y: node.y}
+        break;
+    }
+  }
+
+}
+
+export function getDir(nodeFrom, nodeTo) {
+
+  if(Math.abs(nodeFrom.x - nodeTo.x) > 
+     Math.abs(nodeFrom.y - nodeTo.y)) {
+      if(nodeFrom.x > nodeTo.x) {
+        return {from: 2, to: 0 }
+      } else {
+        return {from: 0, to: 2 }
+      } 
+    } else {
+      if(nodeFrom.y > nodeTo.y) {
+        return {from: 3, to: 1 }
+      } else {
+        return {from: 1, to: 3 }
+      } 
   }
 
 }

@@ -42,11 +42,8 @@ function initDummy() {
     node2.connections.push(new NodeConnection(node3, AT_TAKEOFF))
     node3.connections.push(new NodeConnection(node1, AT_TAKEOFF))
 
-    graph.addNode(node1);
-    graph.addNode(node2);
-    graph.addNode(node3);
-    graph.addNode(node4);
-    graph.addNode(node5);
+    let nodes = [node1,node2,node3,node4,node5];    
+    graph.addNodes(nodes);
     newState.graph = graph;
     AirportStateStore.set(newState);
 }

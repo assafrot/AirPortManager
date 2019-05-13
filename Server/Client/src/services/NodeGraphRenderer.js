@@ -1,25 +1,18 @@
 
 import {AT_TAKEOFF, AT_LANDING} from "../models/Events";
+import { getDir } from "../services/NodeGraph"
 
 export class NodeGraphRenderer {
 
   constructor(ctx) {
     this.ctx = ctx;
-    this.style = {
-      connection:{
-        lineWidth: 2,
-        arrowSize: 15,
-        colors : {
-          AT_LANDING:"red",
-          AT_TAKEOFF:"blue"
-        } 
-      }
-    };
+    this.style = {};
   }
 
   drawNodeGraph(graph) {
     this.ctx.clearRect(0, 0, 800, 600);
-  
+    this.style = graph.style;
+
     this.drawConnections(graph);
   
     graph.nodes.forEach(node => {
@@ -66,74 +59,87 @@ export class NodeGraphRenderer {
 
   drawConnections(graph) {
     
-    let color;
-
-    graph.nodes.forEach(node => {
-      node.connections.forEach((connection) => {
-        this.drawConnection(node, connection, this.style.connection.colors[connection.type]);
-      });
+    graph.connections.forEach(connection => {
+      this.drawConnection(connection.pointFrom, connection.pointTo, connection.color);
     })
-    // graph.nodes.forEach(node => {
-    //   node.connections.forEach((connection) => {
-    //     let ap = this.calcArrowPosition(node, connection.node, this.style.connection.arrowSize);
-    //     this.drawTriangle(ap, ap.dir * 90, this.style.connection.arrowSize, this.style.connection.colors[connection.type]);
-    //   });
-    // })
-
-    graph.generatedConnections.forEach(graphConnection => {
-      this.drawGraphConnection(graphConnection);
+    
+    graph.connections.forEach(connection => {
+      this.drawArrow(connection.pointFrom, connection.pointTo, connection.dir, connection.color);
     })
 
   }
 
-  drawGraphConnection(graphConnection) {
-    
+  drawArrow(pointFrom, pointTo, dir, color) {
+    let m = this.calcIncine(pointFrom, pointTo);
+    let arrowPoint = this.calcArrowPosition(pointTo, pointFrom, dir.to, m);
+    let angle = -this.calcDegree(pointFrom, pointTo) + 90;
 
-
-    graphConnection.connections.forEach((connection,idx) => {
-      
-      let modifiedNodeFrom = {}
-      Object.assign(modifiedNodeFrom, graphConnection.nodeLeft);
-      modifiedNodeFrom.x -= (this.style.connection.lineWidth * idx)
-      
-      let modifiedNodeTo = {}
-      Object.assign( modifiedNodeTo, graphConnection.nodeRight);
-      modifiedNodeTo.y -= (this.style.connection.lineWidth * idx)
-      
-      this.drawConnection(modifiedNodeFrom, modifiedNodeTo, 
-        this.style.connection.colors[connection.type]);
-    })
+    this.drawTriangle(arrowPoint, angle,
+    this.style.connection.arrowSize,color);
   }
 
-  drawConnection(nodeFrom, nodeTo, color) {
-    this.ctx.beginPath();
+  calcIncine(pointA, pointB) {
+    return (pointA.y - pointB.y) / (pointA.x - pointB.x);
+  }
 
-    this.ctx.moveTo(nodeFrom.x + (nodeFrom.width / 2), 
-                    nodeFrom.y + (nodeFrom.height / 2));
+  calcDegree(pointFrom, pointTo) {
+    let x = pointTo.x - pointFrom.x;
+    let y = pointTo.y - pointFrom.y;
   
-    if(Math.abs(nodeFrom.x - nodeTo.x) > 
-       Math.abs(nodeFrom.y - nodeTo.y)) {
-
-      this.ctx.lineTo(nodeTo.x + (nodeTo.width / 2),
-                      nodeFrom.y + (nodeFrom.height / 2));
-
-    } else {
-  
-      this.ctx.lineTo(nodeFrom.x + (nodeFrom.width / 2),
-                      nodeTo.y + (nodeTo.height / 2));
+    let angle = Math.atan2(x, y);
+    let dAngle = this.toDegree(angle);
     
+    return dAngle;
+  }
+
+  calcArrowPosition(pointTo,pointFrom, dir, m) {
+    let arrowSize = this.style.connection.arrowSize;
+    
+    switch(dir) {
+      case 0:
+        return {x: pointTo.x + (arrowSize / 2), y : pointTo.y + (m * (arrowSize / 2))}
+        break;
+      case 1:{
+        if(m == Infinity) {
+          
+          return {x: pointTo.x , y : pointTo.y + (arrowSize / 2)}
+        }
+        let x = ((pointTo.y + (arrowSize / 2)) - pointFrom.y + m * pointFrom.x) / m;
+        return {x: x  , y : pointTo.y + (arrowSize / 2)}
+      }break;
+      case 2:
+      return {x: pointTo.x - (arrowSize / 2), y : pointTo.y - (m * (arrowSize / 2)) }
+      break;
+      case 3:{
+        if(m == -Infinity){
+          return {x: pointTo.x , y : pointTo.y - (arrowSize / 2)}
+        }
+        let x = ((pointTo.y - (arrowSize / 2)) - pointFrom.y + m * pointFrom.x) / m;
+        return {x: x , y : pointTo.y - (arrowSize / 2)}
+      }break;
     }
-  
-    this.ctx.lineTo(nodeTo.x + (nodeTo.width / 2), 
-                    nodeTo.y + (nodeTo.height / 2));
+  }
+
+  drawConnection(pointFrom, pointTo, color) {
+    this.ctx.beginPath();
+    this.ctx.moveTo(pointFrom.x, pointFrom.y);
+    this.ctx.lineTo(pointTo.x, pointTo.y);
     this.ctx.strokeStyle = color;
     this.ctx.lineWidth = this.style.connection.lineWidth;
     this.ctx.stroke();
   }
 
+  toDegree(angle) {
+    return angle / 0.01745329 ;
+  }
+
+  toRadian(angle) {
+    return angle * 0.01745329 ;
+  }
 
   drawTriangle(cPoint, angle = 0, size = 10, color = "black") {
-    angle = angle * 0.01745329 ;
+    angle = this.toRadian(angle);
+
     this.ctx.beginPath();
     this.ctx.fillStyle = color;
     
@@ -157,79 +163,13 @@ export class NodeGraphRenderer {
     this.ctx.fill();
   }
 
-
-  calcArrowPosition(nodeFrom, nodeTo, arrowSize) {
-
-    let pos = {};
-
-    if(Math.abs(nodeFrom.x - nodeTo.x) > Math.abs(nodeFrom.y - nodeTo.y)) {
-
-      
-      if(nodeFrom.y + (nodeFrom.height/2) < nodeTo.y) {
-        pos.x = nodeTo.x + (nodeTo.width / 2);
-        pos.y = nodeTo.y - (arrowSize / 2);
-        pos.dir = 1;
-      } 
-      else if (nodeFrom.y + (nodeFrom.height/2) <= nodeTo.y + nodeTo.height)
-      {
-        
-        if(nodeTo.x < nodeFrom.x) {
-          pos.x = nodeTo.x  + nodeTo.width + (arrowSize / 2);
-          pos.dir = 2;
-        } else {
-          pos.x = nodeTo.x - (arrowSize / 2);
-          pos.dir = 0;
-        }
-        
-        pos.y = nodeFrom.y + (nodeFrom.height / 2);
-      }
-      else {
-        pos.x = nodeTo.x + (nodeTo.width / 2);
-        pos.y = nodeTo.y + nodeTo.height + (arrowSize / 2);
-        pos.dir = 3;
-      }
-      
-    } 
-    else 
-    {
-      
-      if(nodeFrom.x + (nodeFrom.width/2) < nodeTo.x) {
-        pos.y = nodeTo.y + (nodeTo.height / 2);
-        pos.x = nodeTo.x - (arrowSize / 2);
-        pos.dir = 0;
-      }
-      else if (nodeFrom.x + (nodeFrom.width/2) <= nodeTo.x + nodeTo.width)
-      {
-        
-        if(nodeTo.y < nodeFrom.y) {
-          pos.y = nodeTo.y  + nodeTo.height + (arrowSize / 2);
-          pos.dir = 3;
-        } else {
-          pos.y = nodeTo.y - (arrowSize / 2);
-          pos.dir = 1;
-        }
-        
-        pos.x = nodeFrom.x + (nodeFrom.width / 2);
-      }
-      else 
-      {
-        pos.y = nodeTo.y + (nodeTo.height / 2);
-        pos.x = nodeTo.x + nodeTo.width + (arrowSize / 2);
-        pos.dir = 2;
-      }
-
-    }
-
-    return pos;
-
-  }
-
+  //angle in radians
   rotateX(point, angle) { return (point.x * Math.cos(angle)) +  
-                                 (point.y * -Math.sin(angle))};
-
+    (point.y * -Math.sin(angle))};
+    
+  //angle in radians
   rotateY(point, angle) { return (point.x * Math.sin(angle)) + 
                                   point.y * Math.cos(angle)};
-
 
 }
 
