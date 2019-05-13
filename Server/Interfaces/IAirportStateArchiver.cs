@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Server.DAL.Models
+namespace Server.Interfaces
 {
-    public class FlightDB : Flight
+    public interface IAirportStateArchiver
     {
-        public int Id { get; set; }
+        void StartArchiving();
     }
 }

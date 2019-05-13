@@ -7,8 +7,7 @@ namespace Manager.Interfaces
 {
     public interface IRouteManager
     {
-        event Action<Station> OnAirplaneMovedIn;
-        event Action<Station> OnAirplaneMovedOut;
+        event Action<StationEvent> OnAirplaneMoved;
         void NotifyStationEmptied(StationEmptiedEventArgs args);
         void Subscribe(IStationService stationServ);
         void Unsubscribe(IStationService stationServ);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.DAL.Models
 {
-    public class StationEventDB: StationEvent
+    public class StationEventDB : StationEvent
     {
         public int Id { get; set; }
         public int StationId { get; set; }

@@ -11,30 +11,23 @@ namespace Manager.LogicObjects
     public class StationService : IStationService
     {
 
-        public StationService(Station station, IRouteManager routeManager)
+        public StationService(Station station, IRouteManager routeManager, ITimer timer)
         {
+            _timer = timer;
             _routeManager = routeManager;
             Station = station;
         }
 
         IRouteManager _routeManager;
+        ITimer _timer;
 
         public Station Station { get; set; }
 
         public async void MoveIn(Flight airplane)
         {
             Station.Airplane = airplane;
-            await Timer();
+            await _timer.Wait(2000);
             _routeManager.Subscribe(this);
-        }
-
-        Task Timer()
-        {
-            return Task.Run(() =>
-            {
-                Random rnd = new Random();
-                Thread.Sleep(rnd.Next(3)+1 * 200);
-            });
         }
 
         public void MoveOut(IStationService stationServ)

@@ -9,5 +9,6 @@ namespace Manager.Models
         public string Model { get; set; }
         public FlightActionType ActionType { get; set; }
         public DateTime PlannedTime { get; set; }
+        public bool InQueue { get; set; }
     }
 }

@@ -26,8 +26,7 @@ namespace Manager.LogicObjects
             }
         }
 
-        public event Action<Station> OnAirplaneMovedIn;
-        public event Action<Station> OnAirplaneMovedOut;
+        public event Action<StationEvent> OnAirplaneMoved;
 
         public void NotifyStationEmptied(StationEmptiedEventArgs args)
         {
@@ -37,11 +36,26 @@ namespace Manager.LogicObjects
             {
                 var stationServiceToNotify = queue.Dequeue();
                 Unsubscribe(stationServiceToNotify);
-
                 stationServiceToNotify.MoveOut(args.StationService);
-                OnAirplaneMovedIn?.Invoke(args.StationService.Station);
-                OnAirplaneMovedOut?.Invoke(stationServiceToNotify.Station);
-               
+
+                OnAirplaneMoved?.Invoke(new StationEvent()
+                {
+                    Airplane = args.StationService.Station.Airplane,
+                    EventType = StationEventType.Entered,
+                    Station = args.StationService.Station,
+                    Time = DateTime.Now
+                });
+
+                OnAirplaneMoved?.Invoke(new StationEvent()
+                {
+                    Airplane = stationServiceToNotify.Station.Airplane,
+                    EventType = StationEventType.Existed,
+                    Station = stationServiceToNotify.Station,
+                    Time = DateTime.Now
+                });
+
+
+
             }
         }
 
@@ -50,13 +64,27 @@ namespace Manager.LogicObjects
             var station = stationServ.Station;
             lock (stationServ)
             {
-                foreach (var stationToSub in station.NextStations[station.Airplane.ActionType])
+                foreach (var nextStation in station.NextStations[station.Airplane.ActionType])
                 {
-                    if (stationToSub.Station.IsEmpty)
+                    if (nextStation.Station.IsEmpty)
                     {
-                        stationServ.MoveOut(stationToSub);
-                        OnAirplaneMovedIn?.Invoke(stationToSub.Station);
-                        OnAirplaneMovedOut?.Invoke(stationServ.Station);
+                        stationServ.MoveOut(nextStation);
+                        OnAirplaneMoved?.Invoke(new StationEvent()
+                        {
+                            Airplane = nextStation.Station.Airplane,
+                            EventType = StationEventType.Entered,
+                            Station = nextStation.Station,
+                            Time = DateTime.Now
+                        });
+
+                        OnAirplaneMoved?.Invoke(new StationEvent()
+                        {
+                            Airplane = stationServ.Station.Airplane,
+                            EventType = StationEventType.Existed,
+                            Station = stationServ.Station,
+                            Time = DateTime.Now
+                        });
+
                         return;
                     }
                 }

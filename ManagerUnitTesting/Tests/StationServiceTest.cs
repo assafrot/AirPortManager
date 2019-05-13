@@ -2,6 +2,7 @@
 using Manager.Interfaces;
 using Manager.LogicObjects;
 using Manager.Models;
+using ManagerUnitTesting.Moqs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,22 +21,40 @@ namespace ManagerUnitTesting.Tests
             st.NextStations[FlightActionType.Landing] = new List<IStationService>();
             st.NextStations[FlightActionType.Takeoff] = new List<IStationService>();
 
-            IStationService ss = new StationService(st, manager);
+            IStationService ss = new StationService(st, manager, new TimerMoq());
 
         }
 
         public void StationService_MoveInAndOutTest()
         {
             RouteManager manager = new RouteManager();
-
             Station st = new Station();
+            Station st2 = new Station();
+
+            int gotAirplaneMoved = 0;
+
+            manager.OnAirplaneMoved += (stationEvnt) =>
+            {
+                if (gotAirplaneMoved != 2)
+                {
+                    if(stationEvnt.EventType == StationEventType.Entered)
+                    {
+                        Assert(stationEvnt.Station == st2);
+                        gotAirplaneMoved++;
+                    } else
+                    {
+                        Assert(stationEvnt.Station == st);
+                        gotAirplaneMoved++;
+                    }
+                }
+            };
+
             st.NextStations = new Dictionary<FlightActionType, List<IStationService>>();
             st.NextStations[FlightActionType.Landing] = new List<IStationService>();
             st.NextStations[FlightActionType.Takeoff] = new List<IStationService>();
 
-            IStationService ss = new StationService(st, manager);
+            IStationService ss = new StationService(st, manager, new TimerMoq());
 
-            Station st2 = new Station();
             st2.NextStations = new Dictionary<FlightActionType, List<IStationService>>();
             st2.NextStations[FlightActionType.Landing] = new List<IStationService>();
             st2.NextStations[FlightActionType.Takeoff] = new List<IStationService>();
@@ -46,25 +65,7 @@ namespace ManagerUnitTesting.Tests
             flight.ActionType = FlightActionType.Landing;
 
             ss.MoveIn(flight);
-            int gotAirplaneMoved = 0;
 
-            manager.OnAirplaneMovedOut += (station) =>
-            {
-                if (gotAirplaneMoved != 2)
-                {
-                    Assert(station == st);
-                    gotAirplaneMoved++;
-                }
-            };
-
-            manager.OnAirplaneMovedIn += (station) =>
-            {
-                if (gotAirplaneMoved != 2)
-                {
-                    Assert(station == st2);
-                    gotAirplaneMoved++;
-                }
-            };
 
             while (gotAirplaneMoved != 2) { }
 

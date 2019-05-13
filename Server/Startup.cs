@@ -13,6 +13,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Server.DAL;
 using Server.DAL.Interfaces;
+using Microsoft.AspNetCore.SignalR;
+using Server.Hubs;
+using Manager.Interfaces;
 
 namespace Server
 {
@@ -31,8 +34,9 @@ namespace Server
             services
                 .AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"))
                 .AddSingleton<IUnitOfWork, UnitOfWork>()
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .AddMvc();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,9 +50,16 @@ namespace Server
             {
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<AirportHub>("/airport");
+            });
+
             app.UseMvc();
+
+            //load airport state
         }
     }
 }
