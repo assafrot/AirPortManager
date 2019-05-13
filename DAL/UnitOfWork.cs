@@ -1,11 +1,11 @@
-﻿using Server.DAL.Interfaces;
-using Server.DAL.Repositories;
+﻿using DAL.Interfaces;
+using DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Server.DAL
+namespace DAL
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -13,17 +13,24 @@ namespace Server.DAL
         {
             _context = context;
             Stations = new RealTimeStationRepository(context);
+            StationHistory = new StationsHistoryRepository(context);
+            Flights = new FlightsRepository(context);
         }
 
         private readonly AirportDbContext _context;
 
         public IRealTimeStationRepository Stations { get; private set; }
+
+        public IStationsHistoryRepository StationHistory { get; private set; }
+
+        public IFlightsRepository Flights { get; private set; }
+
         public void Dispose()
         {
             _context.Dispose();
         }
 
-        public void Save()
+        public void Commit()
         {
             _context.SaveChanges();
         }

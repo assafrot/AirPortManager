@@ -11,8 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Server.DAL;
-using Server.DAL.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Server.Hubs;
 using Manager.Interfaces;
@@ -32,8 +30,8 @@ namespace Server
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"))
-                .AddSingleton<IUnitOfWork, UnitOfWork>()
+                .AddDbContext<DAL.AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"))
+                .AddScoped<DAL.Interfaces.IUnitOfWork, DAL.UnitOfWork>()
                 .AddMvc();
 
             services.AddSignalR();

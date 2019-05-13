@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Manager.Models;
+using Microsoft.EntityFrameworkCore;
 using Server.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,8 @@ namespace Server.DAL
     {
         public AirportDbContext(DbContextOptions<AirportDbContext> opts) : base(opts) {}
 
-        public DbSet<FlightDB> Airplanes { get; set; }
         public DbSet<StationDB> Stations { get; set; }
         public DbSet<StationEventDB> Events { get; set; }
-        public DbSet<FlightDB> Flights { get; set; }
+        public DbSet<Flight> Flights { get; set; }
     }
 }

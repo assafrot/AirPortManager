@@ -1,4 +1,5 @@
-﻿using Manager.Interfaces;
+﻿using Common.Models;
+using Manager.Interfaces;
 using Manager.Models;
 using System;
 using System.Collections.Generic;
@@ -22,18 +23,19 @@ namespace Manager.LogicObjects
         ITimer _timer;
 
         public Station Station { get; set; }
+        public Dictionary<FlightActionType, List<IStationService>> NextStationsServices { get; set; }
 
         public async void MoveIn(Flight airplane)
         {
-            Station.Airplane = airplane;
+            Station.Flight = airplane;
             await _timer.Wait(2000);
             _routeManager.Subscribe(this);
         }
 
         public void MoveOut(IStationService stationServ)
         {
-            var airplaneToMove = Station.Airplane;
-            Station.Airplane = null;
+            var airplaneToMove = Station.Flight;
+            Station.Flight = null;
             _routeManager.NotifyStationEmptied(new StationEmptiedEventArgs(this));
             stationServ.MoveIn(airplaneToMove);
         }

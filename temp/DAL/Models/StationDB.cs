@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Server.DAL.Models
 {
-    public class FlightDB : Flight
+    public class StationDB : Station
     {
-        public int Id { get; set; }
+        public int FlightId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Manager.Interfaces;
+﻿using Common.Models;
+using Manager.Interfaces;
 using Manager.Models;
 using Microsoft.AspNetCore.SignalR;
 using System;

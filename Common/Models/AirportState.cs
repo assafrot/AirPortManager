@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Manager.Models
+namespace Common.Models
 {
     public class AirportState
     {

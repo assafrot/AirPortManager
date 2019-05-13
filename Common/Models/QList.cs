@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Manager.Models
+namespace Common.Models
 {
     public class QList<T> : IEnumerable<T>
     {

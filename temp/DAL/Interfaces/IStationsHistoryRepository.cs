@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.DAL.Interfaces
 {
-    interface IStationsHistoryRepository : IRepository<StationEventDB>
+    public interface IStationsHistoryRepository : IRepository<StationEventDB>
     {
     }
 }
