@@ -1,4 +1,6 @@
-﻿using Manager.Models;
+﻿using Common.Models;
+using DAL.Interfaces;
+using Manager.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

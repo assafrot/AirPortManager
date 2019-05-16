@@ -1,4 +1,5 @@
-﻿using Manager.Interfaces;
+﻿using Common.Models;
+using Manager.Interfaces;
 using Manager.Models;
 using System;
 using System.Collections.Generic;
@@ -20,17 +21,19 @@ namespace Manager.LogicObjects
         IRouteManager _routeManager;
         public Station Station { get; set; }
         public bool GotAirplanesInQueue { get => Queue.Any();}
+        public Dictionary<FlightActionType, List<IStationService>> NextStationsServices { get; set; }
+
         bool subToRouteManager = false;
 
-        public void MoveIn(Flight airplane)
+        public void MoveIn(Flight flight)
         {
             lock (Queue)
             {
-                Queue.Enqueue(airplane);
+                Queue.Enqueue(flight);
                 if (subToRouteManager == false)
                 {
                     subToRouteManager = true;
-                    Station.Airplane = airplane;
+                    Station.Flight = flight;
                     _routeManager.Subscribe(this);
                 }
             }
@@ -46,7 +49,7 @@ namespace Manager.LogicObjects
 
                 if (GotAirplanesInQueue)
                 {
-                    Station.Airplane = Queue.Peek();
+                    Station.Flight = Queue.Peek();
                     _routeManager.Subscribe(this);
                 } else
                 {

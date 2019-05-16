@@ -1,4 +1,5 @@
-﻿using Manager.Interfaces;
+﻿using Common.Models;
+using Manager.Interfaces;
 using Manager.Models;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,8 @@ namespace Manager.LogicObjects
             }
         }
 
-        public event Action<Station> OnAirplaneMovedIn;
-        public event Action<Station> OnAirplaneMovedOut;
+        public event Action<StationEvent> OnAirplaneMoved;
+        public event Action<Flight> OnAirplaneDequeue;
 
         public void NotifyStationEmptied(StationEmptiedEventArgs args)
         {
@@ -36,34 +37,71 @@ namespace Manager.LogicObjects
             if (haveSubs && queue.Any())
             {
                 var stationServiceToNotify = queue.Dequeue();
+                if (stationServiceToNotify is StartStationService)
+                {
+                    var flight = stationServiceToNotify.Station.Flight;
+                    flight.InQueue = false;
+                    OnAirplaneDequeue?.Invoke(flight);
+                }
                 Unsubscribe(stationServiceToNotify);
-
                 stationServiceToNotify.MoveOut(args.StationService);
-                OnAirplaneMovedIn?.Invoke(args.StationService.Station);
-                OnAirplaneMovedOut?.Invoke(stationServiceToNotify.Station);
-               
+
+          
+
+                OnAirplaneMoved?.Invoke(new StationEvent()
+                {
+                    Flight = args.StationService.Station.Flight,
+                    EventType = StationEventType.Entered,
+                    Station = args.StationService.Station,
+                    Time = DateTime.Now
+                });
+
+                OnAirplaneMoved?.Invoke(new StationEvent()
+                {
+                    Flight = stationServiceToNotify.Station.Flight,
+                    EventType = StationEventType.Existed,
+                    Station = stationServiceToNotify.Station,
+                    Time = DateTime.Now
+                });
+
+
+
             }
         }
 
         public void Subscribe(IStationService stationServ)
         {
-            var station = stationServ.Station;
+            var station = stationServ;
             lock (stationServ)
             {
-                foreach (var stationToSub in station.NextStations[station.Airplane.ActionType])
+                foreach (var nextStation in station.NextStationsServices[station.Station.Flight.ActionType])
                 {
-                    if (stationToSub.Station.IsEmpty)
+                    if (nextStation.Station.IsEmpty)
                     {
-                        stationServ.MoveOut(stationToSub);
-                        OnAirplaneMovedIn?.Invoke(stationToSub.Station);
-                        OnAirplaneMovedOut?.Invoke(stationServ.Station);
+                        stationServ.MoveOut(nextStation);
+                        OnAirplaneMoved?.Invoke(new StationEvent()
+                        {
+                            Flight = nextStation.Station.Flight,
+                            EventType = StationEventType.Entered,
+                            Station = nextStation.Station,
+                            Time = DateTime.Now
+                        });
+
+                        OnAirplaneMoved?.Invoke(new StationEvent()
+                        {
+                            Flight = stationServ.Station.Flight,
+                            EventType = StationEventType.Existed,
+                            Station = stationServ.Station,
+                            Time = DateTime.Now
+                        });
+
                         return;
                     }
                 }
             }
 
 
-            foreach (var stationToSub in station.NextStations[station.Airplane.ActionType])
+            foreach (var stationToSub in station.NextStationsServices[station.Station.Flight.ActionType])
             {
                 _stationQueue[stationToSub].Enqueue(stationServ);
             }
@@ -72,9 +110,9 @@ namespace Manager.LogicObjects
 
         public void Unsubscribe(IStationService stationServ)
         {
-            var station = stationServ.Station;
+            var stationService = stationServ;
 
-            station.NextStations[station.Airplane.ActionType].ForEach(stationToUnsub =>
+            stationService.NextStationsServices[stationService.Station.Flight.ActionType].ForEach(stationToUnsub =>
             {
                 _stationQueue[stationToUnsub].Remove(stationServ);
             });
