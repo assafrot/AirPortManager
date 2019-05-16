@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "..\\src\\App.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\r\n\timport AirplaneList from \"./components/AirplaneList.svelte\";\r\n\timport NodeCanvas from \"./components/NodeCanvas.svelte\";\r\n\timport {AirportService} from \"./services/AirportService\"\r\n\r\n\tlet airportService = new AirportService();\r\n\r\n</script>\r\n\r\n<style>\r\n\th1 {\r\n\t\tcolor: purple;\r\n\t}\r\n</style>\r\n\r\n<h1>== Airport ==</h1>\r\n\r\n<NodeCanvas ></NodeCanvas >\r\n"
+  ],
+  "names": [],
+  "mappings": "AAUC,EAAE,cAAC,CAAC,AACH,KAAK,CAAE,MAAM,AACd,CAAC"
+}

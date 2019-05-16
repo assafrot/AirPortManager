@@ -15,7 +15,8 @@
   "scripts": {
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
-    "dev": "run-p start:dev autobuild & open http://localhost:5000",
+    "dev": "run-p start:dev autobuild",
+    "dev-o": "run-p start:dev autobuild & open http://localhost:5000",
     "start": "sirv public",
     "start:dev": "sirv public --dev"
   }

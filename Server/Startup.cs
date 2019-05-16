@@ -48,6 +48,8 @@ namespace Server
             {
                 app.UseHsts();
             }
+
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
 
             app.UseSignalR(routes =>
@@ -55,7 +57,9 @@ namespace Server
                 routes.MapHub<AirportHub>("/airport");
             });
 
-            app.UseMvc();
+            app.UseMvc( routes => {
+                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}");
+            });
 
             //load airport state
         }
