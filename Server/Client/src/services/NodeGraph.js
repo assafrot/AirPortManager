@@ -8,6 +8,9 @@ export class NodeGraph {
     this.nodeConnectionList = this.generateConnectionList();
     this.connections = this.generateConnections();
     this.style = {
+      node: {
+        color: "lightgrey"
+      },
       connection:{
         lineWidth: 4,
         lineMargin: 10,

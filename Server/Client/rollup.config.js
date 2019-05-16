@@ -12,8 +12,9 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/bundle.js'
+		file: 'public/bundle.js',
 	},
+
 	plugins: [
 		svelte({
 			// enable run-time checks when not in production
@@ -24,12 +25,6 @@ export default {
 				css.write('public/bundle.css');
 			}
 		}),
-
-		// If you have external dependencies installed from
-		// npm, you'll most likely need these plugins. In
-		// some cases you'll need additional configuration —
-		// consult the documentation for details:
-		// https://github.com/rollup/rollup-plugin-commonjs
 		resolve(),
 		commonjs(),
 

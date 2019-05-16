@@ -10,12 +10,22 @@ export let AirportStateStore = writable(new AirportState());
 export class AirportService {
 
   constructor() {
-    this.url = "http://localhost:3000";
+    this.url = "https://localhost:44389";
     this.fetchAirportState();
   }
 
   fetchAirportState() {
     initDummy();
+
+    let connection = $.hubConnection(this.url);
+
+    connection.start().done(function() {
+    // Wire up Send button to call NewContosoChatMessage on the server.
+      console.log(connection.id);
+    });
+
+    console.log("done");
+    
   }
 
 }

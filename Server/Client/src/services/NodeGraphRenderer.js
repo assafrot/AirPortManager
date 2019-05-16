@@ -23,7 +23,7 @@ export class NodeGraphRenderer {
 
   drawNode(node) {
     this.ctx.beginPath();
-    this.ctx.fillStyle = "grey";
+    this.ctx.fillStyle = this.style.node.color;
     this.ctx.fillRect(node.x, node.y, node.width, node.height); 
     this.ctx.fill();
      
@@ -101,7 +101,6 @@ export class NodeGraphRenderer {
         break;
       case 1:{
         if(m == Infinity) {
-          
           return {x: pointTo.x , y : pointTo.y + (arrowSize / 2)}
         }
         let x = ((pointTo.y + (arrowSize / 2)) - pointFrom.y + m * pointFrom.x) / m;
