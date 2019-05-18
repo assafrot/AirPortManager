@@ -15,7 +15,7 @@ public class HomeController : Controller
   
   public IActionResult Index()
   {
-    return File(_evn.WebRootPath+"\\index.html", "text/html");
+    return File(System.IO.File.OpenRead(_evn.WebRootPath+"\\index.html"), "text/html");
   }
 
 }

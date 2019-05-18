@@ -41,5 +41,10 @@ namespace DAL.Repositories
         {
             _context.Set<T>().Remove(entity);
         }
+
+        public void AddRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().AddRange(entities);
+        }
     }
 }

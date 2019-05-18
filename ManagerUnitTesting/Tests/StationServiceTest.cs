@@ -15,14 +15,14 @@ namespace ManagerUnitTesting.Tests
 
         public void StationService_CreateTest()
         {
-            RouteManager manager = new RouteManager();
-            StationService st = new StationService(new Station(), manager, new TimerMoq());
+            //RouteManager manager = new RouteManager();
+            //StationService st = new StationService(new Station(), manager, new TimerMoq());
 
-            st.NextStationsServices = new Dictionary<FlightActionType, List<IStationService>>();
-            st.NextStationsServices[FlightActionType.Landing] = new List<IStationService>();
-            st.NextStationsServices[FlightActionType.Takeoff] = new List<IStationService>();
+            //st.NextStationsServices = new Dictionary<FlightActionType, List<IStationService>>();
+            //st.NextStationsServices[FlightActionType.Landing] = new List<IStationService>();
+            //st.NextStationsServices[FlightActionType.Takeoff] = new List<IStationService>();
 
-            IStationService ss = new StationService(new Station(), manager, new TimerMoq());
+            //IStationService ss = new StationService(new Station(), manager, new TimerMoq());
 
         }
 

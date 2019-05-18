@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Common.Models;
+using DAL.Interfaces;
+using DAL;
+using DAL.Repositories;
 
 namespace Extenstions
 {
@@ -33,26 +36,31 @@ namespace Extenstions
 
         public static StationDB ToDB (this Station station)
         {
-            return new StationDB()
+            var stationDB = new StationDB()
             {
                 Id = station.Id,
                 Flight = station.Flight,
                 EndPoint = station.EndPoint,
-                StartPoint = station.StartPoint,
-                //NextStations = station.NextStations
+                StartPoint = station.StartPoint,                
             };
+
+            //is the linking station important here?
+
+            return stationDB;
         }
 
         public static Station ToDTO(this StationDB stationDB)
         {
-            return new Station()
+            var station = new Station()
             {
                 Id = stationDB.Id,
                 Flight = stationDB.Flight,
                 EndPoint = stationDB.EndPoint,
                 StartPoint = stationDB.StartPoint,
-              //  NextStations = stationDB.NextStations
+                NextStations = new Dictionary<FlightActionType, List<Station>>()
             };
+
+            return station;
         }
     }
 }

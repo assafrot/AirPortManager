@@ -18,12 +18,6 @@ namespace Manager.LogicObjects
         }
         IUnitOfWork _unitOfWork { get; set; }
 
-
-        public Dictionary<FlightActionType, IStationService> GetStartingPoints(AirportState state)
-        {
-            throw new NotImplementedException();
-        }
-
         public AirportState Load()
         {
             AirportState state = new AirportState();
@@ -31,6 +25,8 @@ namespace Manager.LogicObjects
             var stations = new List<Station>();
             foreach (var station in stationsDB)
             {
+                var stationDto = station.ToDTO();
+                stationDto.NextStations = _unitOfWork.Stations.GetLinkedStation(station.Id);
                 stations.Add(station.ToDTO());
             }
             state.Stations = stations;

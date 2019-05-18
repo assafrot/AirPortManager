@@ -52,5 +52,6 @@ namespace Server.Services
             flightToUpdate.InQueue = flight.InQueue;
             UnitOfWork.Commit();
         }
+
     }
 }

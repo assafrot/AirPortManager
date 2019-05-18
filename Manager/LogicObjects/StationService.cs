@@ -12,11 +12,10 @@ namespace Manager.LogicObjects
     public class StationService : IStationService
     {
 
-        public StationService(Station station, IRouteManager routeManager, ITimer timer)
+        public StationService(IRouteManager routeManager, ITimer timer)
         {
             _timer = timer;
             _routeManager = routeManager;
-            Station = station;
         }
 
         IRouteManager _routeManager;

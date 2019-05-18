@@ -9,6 +9,6 @@ namespace Common.Models
         public bool IsEmpty { get => Flight == null;}
         public bool EndPoint { get; set; }
         public bool StartPoint { get; set; }
-        //public Dictionary<FlightActionType, List<Station>> NextStations { get; set; }
+        public Dictionary<FlightActionType, List<Station>> NextStations { get; set; }
     }
 }

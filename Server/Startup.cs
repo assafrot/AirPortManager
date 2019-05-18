@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.SignalR;
 using Server.Hubs;
 using Manager.Interfaces;
+using Server.Interfaces;
 
 namespace Server
 {
@@ -38,7 +39,7 @@ namespace Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDBSeederService seeder)
         {
             if (env.IsDevelopment())
             {
@@ -62,6 +63,7 @@ namespace Server
             });
 
             //load airport state
+            seeder.JsonSeed(@"StationData");
         }
     }
 }
