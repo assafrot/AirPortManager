@@ -10,6 +10,7 @@ namespace DAL.Interfaces
         IRealTimeStationRepository Stations { get; }
         IStationsHistoryRepository StationHistory { get; }
         IFlightsRepository Flights { get; }
+        IStationsLinksRepository StationsLinks { get; }
 
         void Commit();
     }

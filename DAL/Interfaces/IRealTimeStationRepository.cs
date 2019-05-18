@@ -9,6 +9,5 @@ namespace DAL.Interfaces
 {
     public interface IRealTimeStationRepository : IRepository<StationDB>
     {
-        Dictionary<FlightActionType, List<Station>> GetLinkedStation(int stationId);
     }
 }

@@ -19,11 +19,14 @@ namespace Server.Services
         IUnitOfWork _unitOfWork;
         public void JsonSeed(string jsonData)
         {
+          
            if (!_unitOfWork.Stations.GetAll().Any())
-           {                
-              var stations = JsonConvert.DeserializeObject<List<StationDB>>(jsonData);
-              _unitOfWork.Stations.AddRange(stations);
-              _unitOfWork.Commit();
+            {
+                var stations = JsonConvert.DeserializeObject<List<StationDB>>(jsonData);
+                var stationsLinks = JsonConvert.DeserializeObject<List<StationsLinks>>(jsonData);
+                _unitOfWork.Stations.AddRange(stations);
+                _unitOfWork.StationsLinks.AddRange(stationsLinks);
+                _unitOfWork.Commit();
            }
         }
     }

@@ -43,9 +43,6 @@ namespace Extenstions
                 EndPoint = station.EndPoint,
                 StartPoint = station.StartPoint,                
             };
-
-            //is the linking station important here?
-
             return stationDB;
         }
 

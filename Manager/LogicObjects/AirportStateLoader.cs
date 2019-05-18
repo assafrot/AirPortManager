@@ -2,11 +2,8 @@
 using DAL.Interfaces;
 using Extenstions;
 using Manager.Interfaces;
-using Manager.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Manager.LogicObjects
 {
@@ -26,7 +23,7 @@ namespace Manager.LogicObjects
             foreach (var station in stationsDB)
             {
                 var stationDto = station.ToDTO();
-                stationDto.NextStations = _unitOfWork.Stations.GetLinkedStation(station.Id);
+                stationDto.NextStations = _unitOfWork.StationsLinks.GetLinkedStation(station.Id);
                 stations.Add(station.ToDTO());
             }
             state.Stations = stations;
