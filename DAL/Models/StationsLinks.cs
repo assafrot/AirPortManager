@@ -7,6 +7,7 @@ namespace DAL.Models
 {
     public class StationsLinks
     {
+        public int Id { get; set; }
         public int OriginStationId { get; set; }
         public int DestinationStationId { get; set; }
         public FlightActionType ActionType { get; set; }

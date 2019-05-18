@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.SignalR;
 using Server.Hubs;
 using Manager.Interfaces;
 using Server.Interfaces;
+using Server.Services;
+using DAL;
+using DAL.Interfaces;
 
 namespace Server
 {
@@ -31,8 +34,10 @@ namespace Server
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddDbContext<DAL.AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"))
-                .AddScoped<DAL.Interfaces.IUnitOfWork, DAL.UnitOfWork>()
+                .AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"))
+                .AddScoped<IUnitOfWork, UnitOfWork>()
+                .AddScoped<IDBSeederService,DBSeederService>()
+                .AddScoped<IAirportStateArchiver,AirportStateArchiver>()
                 .AddMvc();
 
             services.AddSignalR();
@@ -63,7 +68,9 @@ namespace Server
             });
 
             //load airport state
-            seeder.JsonSeed(@"StationData");
+            var stationsData = System.IO.File.ReadAllText(@"StationsData.json");
+            var stationsLinksData = System.IO.File.ReadAllText(@"StationsLinks.json");
+            seeder.JsonSeed(stationsData, stationsLinksData);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Server.Extenstions
             {
                 Flight = stationEvent.Flight,
                 EventType = stationEvent.EventType,
-                Station = stationEvent.Station,
+                Station = stationEvent.Station.ToDB(),
                 Time = stationEvent.Time
             };
         }
@@ -27,7 +27,7 @@ namespace Server.Extenstions
             {
                 Flight = stationEventDb.Flight,
                 EventType = stationEventDb.EventType,
-                Station = stationEventDb.Station,
+                Station = stationEventDb.Station.ToDTO(),
                 Time = stationEventDb.Time
             };
         }

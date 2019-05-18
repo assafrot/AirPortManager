@@ -12,5 +12,6 @@ namespace DAL
         public DbSet<StationDB> Stations { get; set; }
         public DbSet<StationsLinks> StationsLinks { get; set; }
         public DbSet<StationEventDB> Events { get; set; }
+
     }
 }

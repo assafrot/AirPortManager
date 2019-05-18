@@ -7,6 +7,6 @@ namespace Server.Interfaces
 {
     public interface IDBSeederService
     {
-        void JsonSeed(string jsonData);
+        void JsonSeed(string jsonData, string jsonData2);
     }
 }
