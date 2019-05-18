@@ -7,8 +7,10 @@ namespace DAL.Models
 {
     public class StationsLinks
     {
-        public int OriginId { get; set; }
-        public int DestinationId { get; set; }
+        public int OriginStationId { get; set; }
+        public int DestinationStationId { get; set; }
         public FlightActionType ActionType { get; set; }
+        public StationDB OriginStation { get; set; }
+        public StationDB DestinationStation { get; set; }
     }
 }

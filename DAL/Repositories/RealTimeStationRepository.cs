@@ -19,9 +19,9 @@ namespace DAL.Repositories
         public Dictionary<FlightActionType, List<Station>> GetLinkedStation(int stationId)
         {
             var linkedStations = new Dictionary<FlightActionType, List<Station>>();
-            var landingStationLinks = AirportContext.StationsLinks.Where(sl => sl.OriginId == stationId
+            var landingStationLinks = AirportContext.StationsLinks.Where(sl => sl.OriginStationId == stationId
             && sl.ActionType == FlightActionType.Landing);
-            var takeoffStationLinks = AirportContext.StationsLinks.Where(sl => sl.OriginId == stationId
+            var takeoffStationLinks = AirportContext.StationsLinks.Where(sl => sl.OriginStationId == stationId
           && sl.ActionType == FlightActionType.Takeoff);
             if (landingStationLinks.Any())
             {
@@ -29,7 +29,7 @@ namespace DAL.Repositories
             }
             foreach (var link in landingStationLinks)
             {
-                var stationToAdd = AirportContext.Stations.Find(link.DestinationId).ToDTO();
+                var stationToAdd = AirportContext.Stations.Find(link.DestinationStationId).ToDTO();
                 linkedStations[FlightActionType.Landing].Add(stationToAdd);
             }
             if (takeoffStationLinks.Any())
@@ -38,7 +38,7 @@ namespace DAL.Repositories
             }
             foreach (var link in takeoffStationLinks)
             {
-                var stationToAdd = AirportContext.Stations.Find(link.DestinationId).ToDTO();
+                var stationToAdd = AirportContext.Stations.Find(link.DestinationStationId).ToDTO();
                 linkedStations[FlightActionType.Takeoff].Add(stationToAdd);
             }
             return linkedStations;
