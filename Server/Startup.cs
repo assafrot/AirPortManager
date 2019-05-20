@@ -16,11 +16,8 @@ using Server.Hubs;
 using Manager.Interfaces;
 using Server.Interfaces;
 using Server.Services;
-<<<<<<< HEAD
-=======
 using DAL;
 using DAL.Interfaces;
->>>>>>> 7508b86626a198edf5c5720e442f6ad0a9f20932
 
 namespace Server
 {
