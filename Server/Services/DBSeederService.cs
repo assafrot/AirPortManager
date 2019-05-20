@@ -17,13 +17,13 @@ namespace Server.Services
             _unitOfWork = unitOfWork;
         }
         IUnitOfWork _unitOfWork;
-        public void JsonSeed(string jsonData)
+        public void JsonSeed(string stationsJson, string stationsLinksJson)
         {
-          
+       
            if (!_unitOfWork.Stations.GetAll().Any())
             {
-                var stations = JsonConvert.DeserializeObject<List<StationDB>>(jsonData);
-                var stationsLinks = JsonConvert.DeserializeObject<List<StationsLinks>>(jsonData);
+                var stations = JsonConvert.DeserializeObject<List<StationDB>>(stationsJson);
+                var stationsLinks = JsonConvert.DeserializeObject<List<StationsLinks>>(stationsLinksJson);
                 _unitOfWork.Stations.AddRange(stations);
                 _unitOfWork.StationsLinks.AddRange(stationsLinks);
                 _unitOfWork.Commit();

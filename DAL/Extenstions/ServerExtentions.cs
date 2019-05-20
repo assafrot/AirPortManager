@@ -18,7 +18,7 @@ namespace Extenstions
             {
                 Flight = stationEvent.Flight,
                 EventType = stationEvent.EventType,
-                Station = stationEvent.Station,
+                Station = stationEvent.Station.ToDB(),
                 Time = stationEvent.Time
             };
         }
@@ -29,7 +29,7 @@ namespace Extenstions
             {
                 Flight = stationEventDb.Flight,
                 EventType = stationEventDb.EventType,
-                Station = stationEventDb.Station,
+                Station = stationEventDb.Station.ToDTO(),
                 Time = stationEventDb.Time
             };
         }
@@ -53,8 +53,7 @@ namespace Extenstions
                 Id = stationDB.Id,
                 Flight = stationDB.Flight,
                 EndPoint = stationDB.EndPoint,
-                StartPoint = stationDB.StartPoint,
-                NextStations = new Dictionary<FlightActionType, List<Station>>()
+                StartPoint = stationDB.StartPoint,                
             };
 
             return station;

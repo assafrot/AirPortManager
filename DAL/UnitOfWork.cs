@@ -11,6 +11,7 @@ namespace DAL
             Stations = new RealTimeStationRepository(context);
             StationHistory = new StationsHistoryRepository(context);
             Flights = new FlightsRepository(context);
+            StationsLinks = new StationsLinksRepository(context);
         }
 
         private readonly AirportDbContext _context;
