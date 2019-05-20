@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.SignalR;
 using Server.Hubs;
 using Manager.Interfaces;
 using Server.Interfaces;
+using Server.Services;
 
 namespace Server
 {
@@ -34,7 +35,7 @@ namespace Server
                 .AddDbContext<DAL.AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"))
                 .AddScoped<DAL.Interfaces.IUnitOfWork, DAL.UnitOfWork>()
                 .AddMvc();
-
+            services.AddTransient<IDBSeederService, DBSeederService>();
             services.AddSignalR();
         }
 
