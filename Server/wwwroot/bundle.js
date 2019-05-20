@@ -772,21 +772,24 @@ var app = (function () {
 	class AirportService {
 
 	  constructor() {
-	    this.url = "https://localhost:44389";
 	    this.fetchAirportState();
 	  }
 
 	  fetchAirportState() {
 	    initDummy();
 
-	    let connection = $.hubConnection(this.url);
+	    // Create WebSocket connection.
+	    const socket = new WebSocket('ws://localhost:5000/ws');
 
-	    connection.start().done(function() {
-	    // Wire up Send button to call NewContosoChatMessage on the server.
-	      console.log(connection.id);
+	    // Connection opened
+	    socket.addEventListener('open', function (event) {
+	        socket.send('Hello Server! asdasdadass');
 	    });
 
-	    console.log("done");
+	    // Listen for messages
+	    socket.addEventListener('message', function (event) {
+	        console.log('Message from server ', event.data);
+	    });
 	    
 	  }
 
