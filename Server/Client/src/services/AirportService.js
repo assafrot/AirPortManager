@@ -17,18 +17,17 @@ export class AirportService {
     initDummy();
 
     // Create WebSocket connection.
-    const socket = new WebSocket('ws://localhost:5000/ws');
-
+    this.socket = new WebSocket('ws://localhost:5000/ws');
     // Connection opened
-    socket.addEventListener('open', function (event) {
+    this.socket.addEventListener('open', function (event) {
         socket.send('Hello Server! asdasdadass');
     });
 
     // Listen for messages
-    socket.addEventListener('message', function (event) {
+    this.socket.addEventListener('message', function (event) {
         console.log('Message from server ', event.data);
     });
-    
+
   }
 
 }

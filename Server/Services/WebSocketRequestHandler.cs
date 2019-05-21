@@ -20,7 +20,7 @@ namespace Server.Interfaces
     IServiceProvider _serviceProvider;
 
     IWebSocketMessenger CreateSocketMessenger(WebSocket socket) {
-      var wsm = (IWebSocketMessenger)_serviceProvider.GetService(typeof(IWebSocketMessenger));
+      var wsm = new WebSocketMessenger();
       wsm.Socket = socket;
       return wsm;
     }

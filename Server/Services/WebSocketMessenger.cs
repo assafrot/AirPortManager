@@ -14,7 +14,7 @@ namespace Server.Interfaces
 {
   public class WebSocketMessenger : IWebSocketMessenger
   {
-    public WebSocketMessenger() 
+    public WebSocketMessenger()
     {
       callbacks = new Dictionary<string, Action<object>>();
     }
@@ -35,9 +35,9 @@ namespace Server.Interfaces
     async void InitSocket()
     {
       var buffer = new byte[1024 * 4];
-      
+
       WebSocketReceiveResult result = await _socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-      
+
       while (!result.CloseStatus.HasValue)
       {
         OnMessage(buffer.GetString(result.Count));
@@ -48,13 +48,22 @@ namespace Server.Interfaces
       OnClose?.Invoke();
     }
 
-    void OnMessage(string json) 
+    void OnMessage(string json)
     {
-      var message = (WebSocketMessage)JsonConvert.DeserializeObject(json);
-      if(callbacks.Keys.Contains(message.Action))
+      
+      try
       {
-        callbacks[message.Action]?.Invoke(message.Payload);
-      }
+        var parsedJson = JsonConvert.DeserializeObject(json);
+
+        if (parsedJson is WebSocketMessage message)
+        {
+          if (callbacks.Keys.Contains(message.Action))
+          {
+            callbacks[message.Action]?.Invoke(message.Payload);
+          }
+        }
+      } catch(Exception e) {}
+
     }
 
     public void On<T>(string action, Action<T> callback)
