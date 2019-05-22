@@ -41,10 +41,10 @@ namespace Server
       services.AddSignalR();
       services
           .AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"), ServiceLifetime.Transient)
-          .AddTransient<IUnitOfWork, UnitOfWork>()
-          .AddTransient<IDBSeederService, DBSeederService>()
-          .AddTransient<IAirportStateArchiver, AirportStateArchiver>()
           .AddMvc();
+            services.AddTransient<IUnitOfWork, UnitOfWork>()
+                 .AddTransient<IDBSeederService, DBSeederService>()
+                 .AddTransient<IAirportStateArchiver, AirportStateArchiver>();
 
 
       services.AddTransient<IAirportManager, AirportManager>();

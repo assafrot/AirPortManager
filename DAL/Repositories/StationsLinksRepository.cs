@@ -21,23 +21,25 @@ namespace DAL.Repositories
             && sl.ActionType == FlightActionType.Landing);
             var takeoffStationLinks = AirportContext.StationsLinks.Where(sl => sl.OriginStationId == stationId
           && sl.ActionType == FlightActionType.Takeoff);
+
+            linkedStations[FlightActionType.Landing] = new List<Station>();
+            linkedStations[FlightActionType.Takeoff] = new List<Station>();
+
             if (landingStationLinks.Any())
             {
-                linkedStations[FlightActionType.Landing] = new List<Station>();
-            }
             foreach (var link in landingStationLinks)
             {
                 var stationToAdd = AirportContext.Stations.Find(link.DestinationStationId).ToDTO();
                 linkedStations[FlightActionType.Landing].Add(stationToAdd);
             }
+            }
             if (takeoffStationLinks.Any())
             {
-                linkedStations[FlightActionType.Takeoff] = new List<Station>();
-            }
             foreach (var link in takeoffStationLinks)
             {
                 var stationToAdd = AirportContext.Stations.Find(link.DestinationStationId).ToDTO();
                 linkedStations[FlightActionType.Takeoff].Add(stationToAdd);
+            }
             }
             return linkedStations;
         }
