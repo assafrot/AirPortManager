@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using System.Net.WebSockets;
 using Microsoft.AspNetCore.Http;
 using System.Threading;
+using Manager.LogicObjects;
 
 namespace Server
 {
@@ -39,16 +40,20 @@ namespace Server
     {
       services.AddSignalR();
       services
-          .AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"))
-          .AddScoped<IUnitOfWork, UnitOfWork>()
-          .AddScoped<IDBSeederService, DBSeederService>()
-          .AddScoped<IAirportStateArchiver, AirportStateArchiver>()
+          .AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"), ServiceLifetime.Transient)
+          .AddTransient<IUnitOfWork, UnitOfWork>()
+          .AddTransient<IDBSeederService, DBSeederService>()
+          .AddTransient<IAirportStateArchiver, AirportStateArchiver>()
           .AddMvc();
+
+
+      services.AddTransient<IAirportManager, AirportManager>();
+      services.AddTransient<IAirportStateLoader, AirportStateLoader>();
+      services.AddTransient<IRouteManager, RouteManager>();
+      services.AddTransient<ITimer, Manager.LogicObjects.Timer>();
       services.AddTransient<IDBSeederService, DBSeederService>();
       services.AddTransient<IWebSocketMessenger, WebSocketMessenger>();
       services.AddTransient<IWebSocketRequestHandler, WebSocketRequestHandler>();
-
-
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,7 +88,7 @@ namespace Server
       // });
       
       app.UseSignalR( builder => {
-        builder.MapHub<AirportHub>("airport");
+        builder.MapHub<AirportHub>("/airport");
       });
 
       app.UseMvc(routes =>

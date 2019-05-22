@@ -8,17 +8,25 @@
 </head>
 <body>
   <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.min.js"></script>
-  <script src="https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalR-2.1.0.js"></script>
+  <script src="signalr.js"></script>
   <script>
-    let connection = $.hubConnection("http://localhost:5000");
-    let hub = connection.createHubProxy('/airport');
 
-    connection.start().done(function () {
-        let invoke = hub.invoke("Test");
-        
-        console.log(invoke);
-        console.log("connected");
+    let connection = new signalR.HubConnectionBuilder().withUrl("/airport").configureLogging(signalR.LogLevel.Information).build();
+    
+    connection.start().then(async () => {
+      let t = await connection.invoke("Test");
+      console.log(t);
     });
+    
+    // let connection = $.hubConnection("http://localhost:5000");
+    // let hub = connection.createHubProxy('/airport');
+
+    // connection.start().done(function () {
+    //     let invoke = hub.invoke("Test");
+        
+    //     console.log(invoke);
+    //     console.log("connected");
+    // });
 
   </script>
 </body>

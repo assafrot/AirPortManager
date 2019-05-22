@@ -11,6 +11,7 @@ namespace Manager.LogicObjects
     {
         public AirportManager(IRouteManager routeManager, ITimer timer ,IAirportStateLoader loader)
         {
+            //_stationServiceBuilder = stationServiceBuilder;
             _timer = timer;
             RouteManager = routeManager;          
             AirportState = loader.Load();            
@@ -19,6 +20,7 @@ namespace Manager.LogicObjects
         }
         Dictionary<FlightActionType, IStationService> StartingStations;
         public IRouteManager RouteManager { get; set; }
+        //private IStationServiceBuilder _stationServiceBuilder;
         private ITimer _timer;
         private List<IStationServiceBuilder> _buildersList;
         public AirportState AirportState { get; set; }
@@ -32,6 +34,7 @@ namespace Manager.LogicObjects
         private void Init()
         {
             _buildersList = new List<IStationServiceBuilder>();
+
             foreach (Station station in AirportState.Stations)
             {
                 var builder = new StationServiceBuilder(RouteManager, _timer);
@@ -42,6 +45,7 @@ namespace Manager.LogicObjects
                     StartingStations.Add(direction, builder.GetStationService());
                 }
             }
+
             foreach (var builder in _buildersList)
             {
                 var station = builder.GetStation();
@@ -68,7 +72,7 @@ namespace Manager.LogicObjects
                 var nextService = GetNextService(nextStation);
                 if (nextService != null)
                 {
-                builder.AddNextStationService(FlightActionType.Landing, nextService);
+                   builder.AddNextStationService(FlightActionType.Landing, nextService);
                 }
             }
         }
@@ -76,6 +80,7 @@ namespace Manager.LogicObjects
         private IStationService GetNextService(Station nextStation)
         {
             IStationService res = null;
+
             foreach (var builder in _buildersList)
             {
                 if (builder.IsStationMatchService(builder.GetStation()))
@@ -84,6 +89,7 @@ namespace Manager.LogicObjects
                     break;
                 }
             }
+
             return res;
         }
 
