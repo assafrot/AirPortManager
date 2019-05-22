@@ -52,8 +52,6 @@ namespace Server
       services.AddTransient<IRouteManager, RouteManager>();
       services.AddTransient<ITimer, Manager.LogicObjects.Timer>();
       services.AddTransient<IDBSeederService, DBSeederService>();
-      services.AddTransient<IWebSocketMessenger, WebSocketMessenger>();
-      services.AddTransient<IWebSocketRequestHandler, WebSocketRequestHandler>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

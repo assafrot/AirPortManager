@@ -778,22 +778,51 @@ var app = (function () {
 	  fetchAirportState() {
 	    initDummy();
 
-	    // Create WebSocket connection.
-	    const socket = new WebSocket('ws://localhost:5000/ws');
-
-	    // Connection opened
-	    socket.addEventListener('open', function (event) {
-	        socket.send('Hello Server! asdasdadass');
-	    });
-
-	    // Listen for messages
-	    socket.addEventListener('message', function (event) {
-	        console.log('Message from server ', event.data);
-	    });
+	    let connection = new signalR.HubConnectionBuilder().withUrl("/airport").configureLogging(signalR.LogLevel.Information).build();
 	    
+	    connection.start().then(async () => {
+	      let state = await connection.invoke("GetAirportState");
+	      
+	      let convertedState = this.convertToClient(state);
+	      
+	      console.log(convertedState);
+	      
+
+	    });
+
+	  }
+
+	  convertToClient(state) {
+	    let newState = state.map(node => {
+
+	      if(node.nextStations != null) {
+
+	        let connections = node.nextStations;
+	        delete node.nextStations;
+	        
+	        node.connections = [];
+	        
+	        Object.keys(connections).forEach(type => {
+
+	          connections[type].forEach(tNode => {
+	            node.connections.push({
+	              node : tNode,
+	              type : type
+	            });
+	          });
+
+	        });
+	      }
+	      
+	      return node;
+	    }); 
+
+	    return newState;
 	  }
 
 	}
+
+
 
 	function initDummy() {
 	    let width = 50;
