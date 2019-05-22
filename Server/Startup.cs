@@ -37,6 +37,7 @@ namespace Server
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddSignalR();
       services
           .AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"))
           .AddScoped<IUnitOfWork, UnitOfWork>()
@@ -47,12 +48,11 @@ namespace Server
       services.AddTransient<IWebSocketMessenger, WebSocketMessenger>();
       services.AddTransient<IWebSocketRequestHandler, WebSocketRequestHandler>();
 
-      services.AddSignalR();
 
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDBSeederService seeder, IWebSocketRequestHandler wsHandler)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDBSeederService seeder)
     {
       if (env.IsDevelopment())
       {
@@ -66,21 +66,24 @@ namespace Server
       app.UseStaticFiles();
       app.UseHttpsRedirection();
 
+      // app.UseWebSockets();
+      // app.Use(async (context, next) =>
+      // {
 
-      app.UseWebSockets();
-      app.Use(async (context, next) =>
-      {
+      //   if (context.Request.Path == "/ws" && context.WebSockets.IsWebSocketRequest)
+      //   {
+      //     WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+      //     wsHandler.AddSocket(webSocket);
+      //   }
+      //   else
+      //   {
+      //     await next();
+      //   }
 
-        if (context.Request.Path == "/ws" && context.WebSockets.IsWebSocketRequest)
-        {
-          WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-          wsHandler.AddSocket(webSocket);
-        }
-        else
-        {
-          await next();
-        }
-
+      // });
+      
+      app.UseSignalR( builder => {
+        builder.MapHub<AirportHub>("airport");
       });
 
       app.UseMvc(routes =>

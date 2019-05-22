@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Server.Hubs
 {
+    
     public class AirportHub : Hub
     {
 
@@ -23,6 +24,11 @@ namespace Server.Hubs
         void OnAirPlaneMoved(StationEvent station)
         {
             Clients.Caller.SendAsync("OnAirplaneMove", station);
+        }
+
+        public string Test() 
+        {
+            return "test string";
         }
 
         protected override void Dispose(bool disposing)

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("[controller]")]
 public class HomeController : Controller
 {
 

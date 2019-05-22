@@ -19,5 +19,8 @@
     "dev-o": "run-p start:dev autobuild & open http://localhost:5000",
     "start": "sirv public",
     "start:dev": "sirv public --dev"
+  },
+  "dependencies": {
+    "@aspnet/signalr": "^1.1.4"
   }
 }
