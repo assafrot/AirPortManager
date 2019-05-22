@@ -15,14 +15,14 @@ namespace ManagerUnitTesting.Tests
 
         public void AirportManager_LoadAndPushTest()
         {
-            IRouteManager router = new RouteManager();
-            IAirportStateLoader loader = new AirportStateLoaderMoq(router);
-            ITimer timer = new TimerMoq();
+            // IRouteManager router = new RouteManager();
+            // IAirportStateLoader loader = new AirportStateLoaderMoq(router);
+            // ITimer timer = new TimerMoq();
 
-            IAirportManager manager = new AirportManager(router, timer,loader);
+            // IAirportManager manager = new AirportManager(router, timer,loader);
 
-            manager.PushAirplane(new Flight() { ActionType = FlightActionType.Landing });
-            manager.PushAirplane(new Flight() { ActionType = FlightActionType.Landing });
+            // manager.PushAirplane(new Flight() { ActionType = FlightActionType.Landing });
+            // manager.PushAirplane(new Flight() { ActionType = FlightActionType.Landing });
 
         }
 

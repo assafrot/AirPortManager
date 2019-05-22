@@ -13,10 +13,10 @@ namespace Server.Hubs
     public class AirportHub : Hub
     {
 
-        public AirportHub(IAirportManager airportManager)
+        public AirportHub()
         {
-            _airportManager = airportManager;
-            _airportManager.RouteManager.OnAirplaneMoved += OnAirPlaneMoved;
+            //_airportManager = airportManager;
+            //_airportManager.RouteManager.OnAirplaneMoved += OnAirPlaneMoved;
         }
 
         IAirportManager _airportManager;
@@ -33,7 +33,7 @@ namespace Server.Hubs
 
         protected override void Dispose(bool disposing)
         {
-            _airportManager.RouteManager.OnAirplaneMoved -= OnAirPlaneMoved;
+            //_airportManager.RouteManager.OnAirplaneMoved -= OnAirPlaneMoved;
             base.Dispose(disposing);
         }
 
