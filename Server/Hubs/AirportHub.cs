@@ -22,9 +22,9 @@ namespace Server.Hubs
 
         IAirportManager _airportManager;
 
-        void OnAirPlaneMoved(StationEvent station)
+        void OnAirPlaneMoved(StationEvent stationEvent)
         {
-            Clients.Caller.SendAsync("OnAirplaneMove", station);
+            Clients.Caller.SendAsync("OnAirplaneMove", stationEvent);
         }
 
         public PhysicalStation[] GetAirportState() 

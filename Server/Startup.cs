@@ -42,16 +42,15 @@ namespace Server
       services
           .AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"), ServiceLifetime.Transient)
           .AddMvc();
-            services.AddTransient<IUnitOfWork, UnitOfWork>()
-                 .AddTransient<IDBSeederService, DBSeederService>()
-                 .AddTransient<IAirportStateArchiver, AirportStateArchiver>();
-
-
-      services.AddTransient<IAirportManager, AirportManager>();
-      services.AddTransient<IAirportStateLoader, AirportStateLoader>();
-      services.AddTransient<IRouteManager, RouteManager>();
-      services.AddTransient<ITimer, Manager.LogicObjects.Timer>();
-      services.AddTransient<IDBSeederService, DBSeederService>();
+      services.AddTransient<IUnitOfWork, UnitOfWork>()
+             .AddTransient<IDBSeederService, DBSeederService>()
+              .AddTransient<IAirportStateArchiver, AirportStateArchiver>()
+        .AddTransient<IAirportManager, AirportManager>()
+        .AddTransient<IAirportStateLoader, AirportStateLoader>()
+        .AddTransient<IRouteManager, RouteManager>()
+        .AddTransient<IStationServicesBuilder, StationServicesBuilder>()
+        .AddTransient<ITimer, Manager.LogicObjects.Timer>()
+        .AddTransient<IDBSeederService, DBSeederService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
