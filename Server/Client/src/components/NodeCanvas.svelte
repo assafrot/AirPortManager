@@ -1,11 +1,11 @@
 
 <script>
 
-  import { NodeGraphRenderer } from "../services/NodeGraphRenderer";
-  import { NodeGraph } from "../services/NodeGraph"
-  import { Node, NodeConnection } from "../models/Node"
-  import { AT_LANDING, AT_TAKEOFF } from "../models/Events"
-  import { AirportStateStore } from "../services/AirportService"
+  import { NodeGraphRenderer } from "../services/NodeGraphRenderer.ts";
+  import { NodeGraph } from "../services/NodeGraph.ts"
+  import { Node, NodeConnection } from "../models/Node.ts"
+  import { AT_LANDING, AT_TAKEOFF } from "../models/Events.ts"
+  import { AirportStateStore } from "../services/AirportService.ts"
   import { onMount } from "svelte";
   import { get } from "svelte/store";
 

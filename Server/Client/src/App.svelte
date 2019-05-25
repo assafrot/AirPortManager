@@ -1,7 +1,7 @@
 <script>
 	import AirplaneList from "./components/AirplaneList.svelte";
 	import NodeCanvas from "./components/NodeCanvas.svelte";
-	import {AirportService} from "./services/AirportService"
+	import {AirportService} from "./services/AirportService.ts"
 
 	let airportService = new AirportService();
 

@@ -862,7 +862,7 @@ var app = (function () {
 		return {
 			c: function create() {
 				canvas_1 = element("canvas");
-				add_location(canvas_1, file, 40, 0, 1083);
+				add_location(canvas_1, file, 40, 0, 1086);
 
 				dispose = [
 					listen(canvas_1, "mousemove", ctx.onMouseMove),
@@ -982,7 +982,7 @@ var app = (function () {
 				t_1 = space();
 				nodecanvas.$$.fragment.c();
 				h1.className = "svelte-hxxdaq";
-				add_location(h1, file$1, 15, 0, 303);
+				add_location(h1, file$1, 15, 0, 306);
 			},
 
 			l: function claim(nodes) {
