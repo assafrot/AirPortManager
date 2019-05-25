@@ -1,17 +1,5 @@
-import { Node } from '../models/Node';
-import { NodeConnection } from '../models/NodeConnection';
-import { Style } from '../models/Style';
-import { Point } from '../models/Point';
-import { NodePairConnection } from '../models/NodePairConnection';
 
 export class NodeGraph {
-
-  public nodes : Array<Node>;
-  public cursor : Point;
-  public movingNodeIdx : number;
-  public nodeConnectionList : Array<NodePairConnection>;
-  public connections : Array<NodeConnection>;
-  public style : Style;
 
   constructor() {
     this.nodes = [];
@@ -46,7 +34,7 @@ export class NodeGraph {
 
     this.nodes.forEach((node,idx) => {
       node.connections.forEach(connection => {
-        let dir = getDir(node, connection.node)
+        let dir = this.getDir(node, connection.node)
         
         if(nodeSideCons[idx][dir.from]) {
           nodeSideCons[idx][dir.from]++;
@@ -64,6 +52,8 @@ export class NodeGraph {
 
       });
     })
+
+    console.log(nodeSideCons);
     
   }
 
@@ -143,7 +133,7 @@ export class NodeGraph {
   }
 
   onCursorPressed() {
-    let hoveredNode = this.getHoveredNode(this.nodes, this.cursor);
+    let hoveredNode = getHoveredNode(this.nodes, this.cursor);
     
     if(hoveredNode) {
       this.movingNodeIdx = this.nodes.indexOf(hoveredNode);
@@ -160,7 +150,7 @@ export class NodeGraph {
   onCursorMoved(position) {
     
     this.nodes.forEach(node => {
-      node.hovered = this.isCursorHovering(node, this.cursor);
+      node.hovered = isCursorHovering(node, this.cursor);
     });
     
     if(this.movingNodeIdx > -1) {
@@ -214,25 +204,25 @@ export function getDir(nodeFrom, nodeTo) {
       } 
   }
 
-  isCursorHovering(node, cursor) {
-    return(between(cursor.x, node.x, node.x + node.width) &&
-           between(cursor.y, node.y, node.y + node.height));
-  }
+}
 
-  getHoveredNode(nodes, cursor) {
-    let hoveredNode;
-  
-    nodes.forEach(node => {
-      if(isCursorHovering(node, cursor)) {
-        hoveredNode = node;
-      }
-    });
-  
-    return hoveredNode;
-  }
-
+function isCursorHovering(node, cursor) {
+  return(between(cursor.x, node.x, node.x + node.width) &&
+         between(cursor.y, node.y, node.y + node.height));
 }
 
 function between(num , min, max) {
   return num >= min && num <= max;
+}
+
+function getHoveredNode(nodes, cursor) {
+  let hoveredNode;
+
+  nodes.forEach(node => {
+    if(isCursorHovering(node, cursor)) {
+      hoveredNode = node;
+    }
+  });
+
+  return hoveredNode;
 }

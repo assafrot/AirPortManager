@@ -1,6 +1,6 @@
 
 import {AT_TAKEOFF, AT_LANDING} from "../models/Events";
-import { getDir } from "./NodeGraph"
+import { getDir } from "../services/NodeGraph"
 
 export class NodeGraphRenderer {
 

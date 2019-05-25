@@ -2,8 +2,7 @@
 import { writable, get } from "svelte/store"
 import { AirportState } from "../models/AirportState"
 import { NodeGraph } from "./NodeGraph";
-import { Node, NextNode } from "../models/Node";
-import { NodeConnection} from "../models/NodeConnection";
+import { Node , NodeConnection} from "../models/Node";
 import { AT_LANDING, AT_TAKEOFF } from "../models/Events";
 
 export let AirportStateStore = writable(new AirportState());
@@ -75,15 +74,15 @@ function initDummy() {
     let node4 = new Node(100,330, width, height);
     let node5 = new Node(300,330, width, height);
     
-    node1.connections.push(new NextNode(node3, AT_LANDING))
-    node3.connections.push(new NextNode(node2, AT_LANDING))
-    node2.connections.push(new NextNode(node4, AT_LANDING))
-    node2.connections.push(new NextNode(node5, AT_LANDING))
+    node1.connections.push(new NodeConnection(node3, AT_LANDING))
+    node3.connections.push(new NodeConnection(node2, AT_LANDING))
+    node2.connections.push(new NodeConnection(node4, AT_LANDING))
+    node2.connections.push(new NodeConnection(node5, AT_LANDING))
     
-    node5.connections.push(new NextNode(node2, AT_TAKEOFF))
-    node4.connections.push(new NextNode(node2, AT_TAKEOFF))
-    node2.connections.push(new NextNode(node3, AT_TAKEOFF))
-    node3.connections.push(new NextNode(node1, AT_TAKEOFF))
+    node5.connections.push(new NodeConnection(node2, AT_TAKEOFF))
+    node4.connections.push(new NodeConnection(node2, AT_TAKEOFF))
+    node2.connections.push(new NodeConnection(node3, AT_TAKEOFF))
+    node3.connections.push(new NodeConnection(node1, AT_TAKEOFF))
 
     let nodes = [node1,node2,node3,node4,node5];    
     graph.addNodes(nodes);
