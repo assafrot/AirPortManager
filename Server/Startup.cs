@@ -49,6 +49,7 @@ namespace Server
         .AddTransient<IAirportStateLoader, AirportStateLoader>()
         .AddTransient<IRouteManager, RouteManager>()
         .AddTransient<IStationServicesBuilder, StationServicesBuilder>()
+        .AddTransient<IPhysicalStationBuilder, PhysicalStationBuilder>()
         .AddTransient<ITimer, Manager.LogicObjects.Timer>()
         .AddTransient<IDBSeederService, DBSeederService>();
     }

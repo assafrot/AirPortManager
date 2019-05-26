@@ -2,6 +2,7 @@
 using Manager.Interfaces;
 using Manager.Models;
 using Microsoft.AspNetCore.SignalR;
+using Server.Interfaces;
 using Server.Models;
 using System;
 using System.Collections.Generic;
@@ -14,58 +15,24 @@ namespace Server.Hubs
     public class AirportHub : Hub
     {
 
-        public AirportHub(IAirportManager airportManager)
+        public AirportHub(IAirportManager airportManager, IPhysicalStationBuilder physicalStationBuilder)
         {
             _airportManager = airportManager;
+            _physicalStationBuilder = physicalStationBuilder;
             _airportManager.RouteManager.OnAirplaneMoved += OnAirPlaneMoved;
         }
 
         IAirportManager _airportManager;
+        IPhysicalStationBuilder _physicalStationBuilder;
 
         void OnAirPlaneMoved(StationEvent stationEvent)
         {
             Clients.Caller.SendAsync("OnAirplaneMove", stationEvent);
         }
 
-        public PhysicalStation[] GetAirportState() 
+        public List<PhysicalStation> GetAirportState() 
         {
-            var stations = new PhysicalStation[3];
-
-            var std1 = new Dictionary<FlightActionType, List<Station>>();
-            std1[FlightActionType.Landing] = new List<Station>();
-            var st1 = new PhysicalStation()
-            {
-                Height = 50,
-                Width = 50,
-                X = 100,
-                Y = 100,
-                NextStations = std1
-            };
-
-            var st2 = new PhysicalStation()
-            {
-                Height = 50,
-                Width = 50,
-                X = 200,
-                Y = 200
-            };
-
-            var st3 = new PhysicalStation()
-            {
-                Height = 50,
-                Width = 50,
-                X = 150,
-                Y = 310
-            };
-            
-            std1[FlightActionType.Landing].Add(st2);
-            std1[FlightActionType.Landing].Add(st3);
-            
-            stations[0] = st1;
-            stations[1] = st2;
-            stations[2] = st3;
-
-            return stations;
+            return _physicalStationBuilder.GetPhysicalStations();
         }
 
         protected override void Dispose(bool disposing)
