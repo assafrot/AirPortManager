@@ -32,13 +32,7 @@ namespace Manager.LogicObjects
                 stationService.Station = station;
                 stationService.NextStationsServices = new Dictionary<FlightActionType, List<IStationService>>();
 
-                if (station.StartPoint)
-                {
-                    var direction = GetStartingPointDirection(station);
-                    StartingStations.Add(direction, stationService);
-                }
-
-                _stationServices.Add(stationService);
+          
             }
             //conext to next services
             foreach (var stationService in _stationServices)
@@ -46,6 +40,13 @@ namespace Manager.LogicObjects
                 var station = stationService.Station;
                 LinkNextService(stationService, station, FlightActionType.Landing);
                 LinkNextService(stationService, station, FlightActionType.Takeoff);
+                if (station.StartPoint)
+                {
+                    var direction = GetStartingPointDirection(station);
+                     StartingStations.Add(direction, stationService);
+                }
+
+                _stationServices.Add(stationService);
             }
 
             return _stationServices;

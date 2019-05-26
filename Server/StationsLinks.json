@@ -1,1 +1,77 @@
-[{"Id":1,"OriginStationId":1,"DestinationStationId":2,"ActionType":0,"OriginStation":null,"DestinationStation":null},{"Id":2,"OriginStationId":1,"DestinationStationId":3,"ActionType":0,"OriginStation":null,"DestinationStation":null},{"Id":3,"OriginStationId":2,"DestinationStationId":4,"ActionType":0,"OriginStation":null,"DestinationStation":null},{"Id":4,"OriginStationId":3,"DestinationStationId":4,"ActionType":0,"OriginStation":null,"DestinationStation":null}]
+[
+  {
+    "OriginStationId": 11,
+    "DestinationStationId": 1,
+    "ActionType": 1
+  },
+  {
+    "OriginStationId": 1,
+    "DestinationStationId": 2,
+    "ActionType": 1
+  },
+  {
+    "OriginStationId": 2,
+    "DestinationStationId": 3,
+    "ActionType": 1
+  },
+  {
+    "OriginStationId": 3,
+    "DestinationStationId": 4,
+    "ActionType": 1
+  },
+  {
+    "OriginStationId": 4,
+    "DestinationStationId": 5,
+    "ActionType": 1
+  },
+  {
+    "OriginStationId": 5,
+    "DestinationStationId": 6,
+    "ActionType": 1
+  },
+  {
+    "OriginStationId": 5,
+    "DestinationStationId": 7,
+    "ActionType": 1
+  },
+  {
+    "OriginStationId": 6,
+    "DestinationStationId": 9,
+    "ActionType": 1
+  },
+  {
+    "OriginStationId": 7,
+    "DestinationStationId": 9,
+    "ActionType": 1
+  },
+        {
+    "OriginStationId": 9,
+    "DestinationStationId": 6,
+    "ActionType": 0
+  },
+  {
+    "OriginStationId": 9,
+    "DestinationStationId": 7,
+    "ActionType": 0
+  },
+  {
+    "OriginStationId": 7,
+    "DestinationStationId": 8,
+    "ActionType": 0
+  },
+  {
+    "OriginStationId": 6,
+    "DestinationStationId": 8,
+    "ActionType": 0
+  },
+  {
+    "OriginStationId": 8,
+    "DestinationStationId": 4,
+    "ActionType": 0
+  },
+            {
+    "OriginStationId": 4,
+    "DestinationStationId": 10,
+    "ActionType": 0
+  }
+]

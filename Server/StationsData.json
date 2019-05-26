@@ -1,1 +1,90 @@
-[{"Id":1,"FlightId":0,"Flight":null,"IsEmpty":true,"EndPoint":false,"StartPoint":true},{"Id":2,"FlightId":0,"Flight":null,"IsEmpty":true,"EndPoint":false,"StartPoint":false},{"Id":3,"FlightId":0,"Flight":null,"IsEmpty":true,"EndPoint":false,"StartPoint":false},{"Id":4,"FlightId":0,"Flight":null,"IsEmpty":true,"EndPoint":true,"StartPoint":false}]
+[
+  {
+    "Id": 1,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": false,
+    "StartPoint": false
+  },
+  {
+    "Id": 2,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": false,
+    "StartPoint": false
+  },
+  {
+    "Id": 3,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": false,
+    "StartPoint": false
+  },
+  {
+    "Id": 4,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": false,
+    "StartPoint": false
+  },
+  {
+    "Id": 5,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": false,
+    "StartPoint": false
+  },
+  {
+    "Id": 6,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": false,
+    "StartPoint": false
+  },
+  {
+    "Id": 7,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": false,
+    "StartPoint": false
+  },
+  {
+    "Id": 8,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": false,
+    "StartPoint": false
+  },
+  {
+    "Id": 9,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": true,
+    "StartPoint": true
+  },
+  {
+    "Id": 10,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": true,
+    "StartPoint": false
+  },
+  {
+    "Id": 11,
+    "FlightId": 0,
+    "Flight": null,
+    "IsEmpty": true,
+    "EndPoint": false,
+    "StartPoint": true
+  }
+]
