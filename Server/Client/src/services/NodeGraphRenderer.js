@@ -10,19 +10,27 @@ export class NodeGraphRenderer {
   }
 
   drawNodeGraph(graph) {
-    this.ctx.clearRect(0, 0, 800, 600);
-    this.style = graph.style;
+    if(graph) {
 
-    if(graph.connections) {
-      this.drawConnections(graph);
+      this.style = graph.style;
+      
+      this.ctx.clearRect(0,0,800,600);
+      this.ctx.beginPath();
+      this.ctx.fillStyle =  this.style.canvas.background;
+      this.ctx.fillRect(0, 0, 800, 600);
+      this.ctx.fill();
+      
+      if(graph.connections) {
+        this.drawConnections(graph);
+      }
+      
+      if(graph.nodes) {
+        graph.nodes.forEach(node => {
+          this.drawNode(node);  
+        })
+      }
+      
     }
-  
-    if(graph.nodes) {
-      graph.nodes.forEach(node => {
-        this.drawNode(node);  
-      })
-    }
-    
   }
 
   drawNode(node) {

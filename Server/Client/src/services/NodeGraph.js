@@ -8,6 +8,9 @@ export class NodeGraph {
     this.nodeConnectionList = this.generateConnectionList();
     this.connections = this.generateConnections();
     this.style = {
+      canvas : {
+        background : "white"
+      },
       node: {
         color: "lightgrey"
       },

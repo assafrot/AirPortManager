@@ -19,12 +19,12 @@
     canvas.height = 600;
     context = canvas.getContext("2d");
     renderer = new NodeGraphRenderer(context);
-    renderer.drawNodeGraph($AirportStateStore.graph);
 
-    AirportStateStore.subscribe(state => {
+    AirportStateStore.subscribe(state => {      
       renderer.drawNodeGraph($AirportStateStore.graph)
     })
 
+    renderer.drawNodeGraph($AirportStateStore.graph);
 
 });
 
@@ -38,8 +38,19 @@
 
 </script>
 
+<style>
+  div {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
+<div class="middle">
 <canvas bind:this={canvas} 
         on:mousemove={onMouseMove}
         on:mousedown={() => $AirportStateStore.graph.onCursorPressed()}
         on:mouseup={() => $AirportStateStore.graph.onCursorReleased()}>
 </canvas>
+</div>

@@ -23,6 +23,29 @@ export class AirportService {
       
       
       let newState = new AirportState();
+
+      //dummy queue
+      newState.airplanesInQueue.push({
+        flightNumber : "123",
+        requestTime : new Date(),
+        actionType : "take off"
+      })
+      newState.airplanesInQueue.push({
+        flightNumber : "123",
+        requestTime : new Date(),
+        actionType : "take off"
+      })
+      newState.airplanesInQueue.push({
+        flightNumber : "123",
+        requestTime : new Date(),
+        actionType : "take off"
+      })
+      newState.airplanesInQueue.push({
+        flightNumber : "123",
+        requestTime : new Date(),
+        actionType : "take off"
+      })
+
       let graph = new NodeGraph();
       
       let nodes = this.convertNodesToClient(state);
@@ -30,6 +53,7 @@ export class AirportService {
       
       graph.addNodes(nodes);
       newState.graph = graph;
+      
       AirportStateStore.set(newState);
 
     });
