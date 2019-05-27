@@ -3,6 +3,7 @@ using Manager.Interfaces;
 using Manager.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,11 @@ namespace Manager.LogicObjects
 
         public async void MoveIn(Flight airplane)
         {
+            if (airplane == null)
+            {
+                Debug.WriteLine("NULL AIRPLANE");
+            }
+
             Station.Flight = airplane;
             await _timer.Wait(2000);
             _routeManager.Subscribe(this);

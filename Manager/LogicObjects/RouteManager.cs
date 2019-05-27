@@ -3,6 +3,7 @@ using Manager.Interfaces;
 using Manager.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Manager.LogicObjects
@@ -21,7 +22,8 @@ namespace Manager.LogicObjects
 
         public void NotifyStationEmptied(StationEmptiedEventArgs args)
         {
-            if(_stationQueue.Keys.Contains(args.StationService) == false)
+
+            if (_stationQueue.Keys.Contains(args.StationService) == false)
             {
                 _stationQueue.Add(args.StationService, new QList<IStationService>());
             }
@@ -74,6 +76,7 @@ namespace Manager.LogicObjects
             var station = stationServ;
             lock (stationServ)
             {
+                Debug.WriteLine(station.Station.Flight);
                 foreach (var nextStation in station.NextStationsServices[station.Station.Flight.ActionType])
                 {
                     if (nextStation.Station.IsEmpty)
@@ -102,7 +105,7 @@ namespace Manager.LogicObjects
 
             foreach (var stationToSub in station.NextStationsServices[station.Station.Flight.ActionType])
             {
-                if(_stationQueue.Keys.Contains(stationToSub) == false )
+                if(!_stationQueue.ContainsKey(stationToSub))
                 {
                     _stationQueue.Add(stationToSub, new QList<IStationService>());
                 }
@@ -115,8 +118,8 @@ namespace Manager.LogicObjects
         public void Unsubscribe(IStationService stationServ)
         {
             var stationService = stationServ;
-
-            stationService.NextStationsServices[stationService.Station.Flight.ActionType].ForEach(stationToUnsub =>
+            var flight = stationService.Station.Flight;
+            stationService.NextStationsServices[flight.ActionType].ForEach(stationToUnsub =>
             {
                 _stationQueue[stationToUnsub].Remove(stationServ);
             });
