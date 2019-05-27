@@ -9,7 +9,7 @@ namespace Common.Models
         public int Id { get; set; }
         public string Model { get; set; }
         public FlightActionType ActionType { get; set; }
-        public DateTime PlannedTime { get; set; }
+        public DateTime RequestedTime { get; set; }
         public bool InQueue { get; set; }
     }
 }

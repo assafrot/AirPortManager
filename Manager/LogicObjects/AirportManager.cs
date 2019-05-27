@@ -24,7 +24,7 @@ namespace Manager.LogicObjects
         private ITimer _timer;
         public AirportState AirportState { get; set; }
 
-        public void PushAirplane(Flight airplane)
+        public void PushFlight(Flight airplane)
         {
             var startingStation = (StartStationService)StartingStations[airplane.ActionType];
             startingStation.MoveIn(airplane);
