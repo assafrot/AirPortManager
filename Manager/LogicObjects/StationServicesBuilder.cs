@@ -28,7 +28,20 @@ namespace Manager.LogicObjects
             //init stations
             foreach (var station in stations)
             {
-                var stationService = new StationService(_routeManager, _timer);
+                IStationService stationService;
+                if (station.StartPoint)
+                {
+                    stationService = new StartStationService(_routeManager, _timer);
+                }
+                else if (station.EndPoint)
+                 {
+                    stationService = new EndStationService(_routeManager, _timer);
+
+                }
+                else
+                {
+                    stationService = new StationService(_routeManager, _timer);
+                }
                 stationService.Station = station;
                 stationService.NextStationsServices = new Dictionary<FlightActionType, List<IStationService>>();
                 _stationServices.Add(stationService);
@@ -39,7 +52,7 @@ namespace Manager.LogicObjects
                 var station = stationService.Station;
                 LinkNextService(stationService, station, FlightActionType.Landing);
                 LinkNextService(stationService, station, FlightActionType.Takeoff);
-                if (station.StartPoint)
+                if (stationService is StartStationService)
                 {
                     var direction = GetStartingPointDirection(station);
                      StartingStations.Add(direction, stationService);
@@ -73,25 +86,25 @@ namespace Manager.LogicObjects
             }
         }
 
-        private IStationService GetNextService(Station nextStation)
+        private IStationService GetStationService(Station nextStation)
         {
-            IStationService nextStationService = null;
 
             foreach (var stationService in _stationServices)
             {
-               if (stationService.Station == nextStation)
+               if (stationService.Station.Id == nextStation.Id)
                 {
-                    nextStationService = stationService;
+                    return stationService;
                 }
             }
-            return nextStationService;
+
+            return null;
         }
 
         private void LinkNextService(IStationService stationService, Station station, FlightActionType flightActionType)
         {
             foreach (var nextStation in station.NextStations[flightActionType])
             {
-                var nextService = GetNextService(nextStation);
+                var nextService = GetStationService(nextStation);
                 if (nextService != null)
                 {
                     AddNextStationService(stationService, FlightActionType.Landing, nextService);

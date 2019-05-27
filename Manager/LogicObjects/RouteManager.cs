@@ -13,27 +13,28 @@ namespace Manager.LogicObjects
         {
             _stationQueue = new Dictionary<IStationService, QList<IStationService>>();
         }
-        private static RouteManager _instance;
-        private Dictionary<IStationService, QList<IStationService>> _stationQueue;
 
-        public static RouteManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new RouteManager();
-                return _instance;
-            }
-        }
+        private Dictionary<IStationService, QList<IStationService>> _stationQueue;
 
         public event Action<StationEvent> OnAirplaneMoved;
         public event Action<Flight> OnAirplaneDequeue;
 
         public void NotifyStationEmptied(StationEmptiedEventArgs args)
         {
+            if(_stationQueue.Keys.Contains(args.StationService) == false)
+            {
+                _stationQueue.Add(args.StationService, new QList<IStationService>());
+            }
+
             var haveSubs = _stationQueue.TryGetValue(args.StationService, out var queue);
-            
-            if (haveSubs && queue.Any())
+            bool any;
+
+            lock (queue)
+            {
+                any = queue.Any();
+            }
+
+            if (haveSubs && any)
             {
                 var stationServiceToNotify = queue.Dequeue();
                 if (stationServiceToNotify is StartStationService)
@@ -99,9 +100,13 @@ namespace Manager.LogicObjects
                 }
             }
 
-
             foreach (var stationToSub in station.NextStationsServices[station.Station.Flight.ActionType])
             {
+                if(_stationQueue.Keys.Contains(stationToSub) == false )
+                {
+                    _stationQueue.Add(stationToSub, new QList<IStationService>());
+                }
+
                 _stationQueue[stationToSub].Enqueue(stationServ);
             }
            

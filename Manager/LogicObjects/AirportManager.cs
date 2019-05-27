@@ -26,7 +26,7 @@ namespace Manager.LogicObjects
 
         public void PushFlight(Flight airplane)
         {
-            var startingStation = (StartStationService)StartingStations[airplane.ActionType];
+            var startingStation = StartingStations[airplane.ActionType];
             startingStation.MoveIn(airplane);
         }
 

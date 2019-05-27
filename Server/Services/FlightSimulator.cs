@@ -23,7 +23,7 @@ namespace Server.Services
             running = true;
             while (running)
             {
-                await _timer.Wait(10000);
+                await _timer.Wait(1000);
                 _airportManager.PushFlight(new Common.Models.Flight()
                 {
                     ActionType = FlightActionType.Landing,

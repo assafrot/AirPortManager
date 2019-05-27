@@ -10,9 +10,8 @@ namespace Manager.LogicObjects
     public class EndStationService : IStationService
     {
 
-        public EndStationService(Station station, IRouteManager routeManager)
+        public EndStationService(IRouteManager routeManager, ITimer timer)
         {
-            Station = station;
             _routeManager = routeManager;
         }
 

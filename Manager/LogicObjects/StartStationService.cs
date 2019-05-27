@@ -11,9 +11,8 @@ namespace Manager.LogicObjects
 {
     public class StartStationService : IStationService
     {
-        public StartStationService(Station station, IRouteManager routeManager)
+        public StartStationService(IRouteManager routeManager, ITimer timer)
         {
-            Station = station;
             _routeManager = routeManager;
         }
 
