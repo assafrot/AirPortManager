@@ -31,10 +31,9 @@ namespace Manager.LogicObjects
                 var stationService = new StationService(_routeManager, _timer);
                 stationService.Station = station;
                 stationService.NextStationsServices = new Dictionary<FlightActionType, List<IStationService>>();
-
-          
+                _stationServices.Add(stationService);
             }
-            //conext to next services
+            //conect to next services
             foreach (var stationService in _stationServices)
             {
                 var station = stationService.Station;
@@ -46,7 +45,6 @@ namespace Manager.LogicObjects
                      StartingStations.Add(direction, stationService);
                 }
 
-                _stationServices.Add(stationService);
             }
 
             return _stationServices;
@@ -64,7 +62,8 @@ namespace Manager.LogicObjects
 
         private FlightActionType GetStartingPointDirection(Station station)
         {
-            if (station.NextStations.ContainsKey(FlightActionType.Landing))
+            if (station.NextStations.ContainsKey(FlightActionType.Landing)
+                && station.NextStations[FlightActionType.Landing].Count>0)
             {
                 return FlightActionType.Landing;
             }
