@@ -17,12 +17,12 @@ namespace Server.Services
         public PhysicalStationBuilder(IAirportManager airportManager)
         {
             _airportManager = airportManager;
-            _physicalStations = new List<PhysicalStation>();
+            _physicalStations = new List<Station>();
         }
 
         IAirportManager _airportManager;
-        List<PhysicalStation> _physicalStations;
-        public List<PhysicalStation> GetPhysicalStations()
+        List<Station> _physicalStations;
+        public List<Station> GetPhysicalStations()
         {
             var stations = _airportManager.AirportState.Stations;
 

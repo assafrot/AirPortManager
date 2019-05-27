@@ -33,15 +33,14 @@ namespace Server.Hubs
             Clients.Caller.SendAsync("OnAirplaneMove", stationEvent);
         }
 
-        public List<PhysicalStation> GetAirportState() 
+        public AirportState GetAirportState() 
         {
-            return _physicalStationBuilder.GetPhysicalStations();
+            return new AirportState()
+            {
+                Stations = _physicalStationBuilder.GetPhysicalStations(),
+                AirplanesInQueue = _airportManager.AirportState.AirplanesInQueue
+            };
         }
-
-        //public List<PhysicalStation> GetPhysicalStations()
-        //{
-
-        //}
 
         protected override void Dispose(bool disposing)
         {

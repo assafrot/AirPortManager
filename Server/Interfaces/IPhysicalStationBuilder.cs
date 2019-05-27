@@ -1,4 +1,5 @@
-﻿using Server.Models;
+﻿using Common.Models;
+using Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace Server.Interfaces
 {
     public interface IPhysicalStationBuilder
     {
-        List<PhysicalStation> GetPhysicalStations();
+        List<Station> GetPhysicalStations();
     }
 }
