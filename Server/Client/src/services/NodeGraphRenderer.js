@@ -35,10 +35,20 @@ export class NodeGraphRenderer {
 
   drawNode(node) {
     this.ctx.beginPath();
-    this.ctx.fillStyle = this.style.node.color;
+    this.ctx.fillStyle = this.style.node.colors.default;
+    if(node.isStartPoint) {
+      this.ctx.fillStyle = this.style.node.colors.startPoint;
+    }
+    if(node.isEndPoint) {
+      this.ctx.fillStyle = this.style.node.colors.endPoint;
+    }
     this.ctx.fillRect(node.x, node.y, node.width, node.height); 
     this.ctx.fill();
-     
+
+    this.ctx.beginPath();
+    this.ctx.fillStyle = "black";
+    this.ctx.fillText(node.id,node.x,node.y);
+    this.ctx.fill();     
     // if(node.hovered) {
     //   this.drawOutlineForNode(node);
     // }

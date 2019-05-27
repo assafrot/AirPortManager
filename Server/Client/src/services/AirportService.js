@@ -61,17 +61,34 @@ export class AirportService {
   }
 
   convertNodesToClient(serverNodes) {
-    let nodeList = serverNodes.map(node => new Node(node.x, node.y, node.width, node.height));
+    let nodeList = serverNodes.map(node => {
+      let newNode = new Node(node.x, node.y, node.width, node.height, node.id)
+      
+      newNode.isStartPoint = node.startPoint;
+      newNode.isEndPoint = node.endPoint;
+      
+      return newNode;
+    });
     console.log(serverNodes);
     
-    serverNodes.forEach((node,idx) => {    
+    serverNodes.forEach((node,idx) => { 
+
       if(node.nextStations) { 
+      
         Object.keys(node.nextStations).forEach(type => {
+      
           node.nextStations[type].forEach((tNode,tIdx) => {
-            nodeList[idx].connections.push(new NodeConnection(nodeList[tIdx],this.actionTypeToClient(type)));
+
+            nodeList[idx].connections.push(
+              new NodeConnection(nodeList[tNode.id-1],
+                this.actionTypeToClient(type)));
+
           })
+      
         })
+      
       }
+      
     });
         
 

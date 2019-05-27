@@ -329,7 +329,11 @@ var app = (function () {
 	        background : "white"
 	      },
 	      node: {
-	        color: "lightgrey"
+	        colors: {
+	          default: "lightgrey",
+	          startPoint: "green",
+	          endPoint: "Pink"
+	        }
 	      },
 	      connection:{
 	        lineWidth: 4,
@@ -583,10 +587,20 @@ var app = (function () {
 
 	  drawNode(node) {
 	    this.ctx.beginPath();
-	    this.ctx.fillStyle = this.style.node.color;
+	    this.ctx.fillStyle = this.style.node.colors.default;
+	    if(node.isStartPoint) {
+	      this.ctx.fillStyle = this.style.node.colors.startPoint;
+	    }
+	    if(node.isEndPoint) {
+	      this.ctx.fillStyle = this.style.node.colors.endPoint;
+	    }
 	    this.ctx.fillRect(node.x, node.y, node.width, node.height); 
 	    this.ctx.fill();
-	     
+
+	    this.ctx.beginPath();
+	    this.ctx.fillStyle = "black";
+	    this.ctx.fillText(node.id,node.x,node.y);
+	    this.ctx.fill();     
 	    // if(node.hovered) {
 	    //   this.drawOutlineForNode(node);
 	    // }
@@ -734,7 +748,7 @@ var app = (function () {
 
 	class Node {
 
-	  constructor(x,y,width,height) {
+	  constructor(x,y,width,height, id) {
 	    this.x = x;
 	    this.y = y;
 	    this.width = width;
@@ -742,6 +756,9 @@ var app = (function () {
 	    this.connections = [];
 	    this.hovered = false;
 	    this.airplane = false;
+	    this.id = id;
+	    this.isStartPoint = false;
+	    this.isEndPoint = false;
 	  }
 
 	}
@@ -853,17 +870,34 @@ var app = (function () {
 	  }
 
 	  convertNodesToClient(serverNodes) {
-	    let nodeList = serverNodes.map(node => new Node(node.x, node.y, node.width, node.height));
+	    let nodeList = serverNodes.map(node => {
+	      let newNode = new Node(node.x, node.y, node.width, node.height, node.id);
+	      
+	      newNode.isStartPoint = node.startPoint;
+	      newNode.isEndPoint = node.endPoint;
+	      
+	      return newNode;
+	    });
 	    console.log(serverNodes);
 	    
-	    serverNodes.forEach((node,idx) => {    
+	    serverNodes.forEach((node,idx) => { 
+
 	      if(node.nextStations) { 
+	      
 	        Object.keys(node.nextStations).forEach(type => {
+	      
 	          node.nextStations[type].forEach((tNode,tIdx) => {
-	            nodeList[idx].connections.push(new NodeConnection(nodeList[tIdx],this.actionTypeToClient(type)));
+
+	            nodeList[idx].connections.push(
+	              new NodeConnection(nodeList[tNode.id-1],
+	                this.actionTypeToClient(type)));
+
 	          });
+	      
 	        });
+	      
 	      }
+	      
 	    });
 	        
 

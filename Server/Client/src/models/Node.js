@@ -1,7 +1,7 @@
 
 export class Node {
 
-  constructor(x,y,width,height) {
+  constructor(x,y,width,height, id) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -9,6 +9,9 @@ export class Node {
     this.connections = [];
     this.hovered = false;
     this.airplane = false;
+    this.id = id;
+    this.isStartPoint = false;
+    this.isEndPoint = false;
   }
 
 }
