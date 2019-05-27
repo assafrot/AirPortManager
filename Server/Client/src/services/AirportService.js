@@ -21,7 +21,10 @@ export class AirportService {
     connection.start().then(async () => {
       let state = await connection.invoke("GetAirportState");
       
-      
+      connection.on("AirplaneMovedIn", this.onAirplaneMovedIn);
+
+      connection.on("AirplaneMovedOut", this.onAirplaneMovedOut);
+
       let newState = new AirportState();
 
       //dummy queue
@@ -61,14 +64,17 @@ export class AirportService {
   }
 
   convertNodesToClient(serverNodes) {
+
     let nodeList = serverNodes.map(node => {
       let newNode = new Node(node.x, node.y, node.width, node.height, node.id)
       
       newNode.isStartPoint = node.startPoint;
       newNode.isEndPoint = node.endPoint;
-      
+      newNode.airplane = node.flight;
+
       return newNode;
     });
+
     console.log(serverNodes);
     
     serverNodes.forEach((node,idx) => { 
@@ -104,6 +110,31 @@ export class AirportService {
         return "AT_LANDING"
         break;
     }
+  }
+
+  onAirplaneMovedIn(event) {
+    let newState = get(AirportStateStore);
+    newState.graph.nodes[event.station.id-1].airplane = event.airplane;
+    AirportStateStore.set(newState);
+  }
+  
+  onAirplaneMovedOut(event) {
+    let newState = get(AirportStateStore);
+    newState.graph.nodes[event.station.id-1].airplane = undefined;
+    AirportStateStore.set(newState);
+  }
+  
+  onAirplaneMovedInToQueue(event) {
+    let newState = get(AirportStateStore);
+    newState.airplanesInQueue.push(event.airplane);
+    AirportStateStore.set(newState);
+  }
+  
+  onAirplaneMovedOutOfQueue(event) {
+    let newState = get(AirportStateStore);
+    let airplaneToRemove = newState.airplanesInQueue.find(airplane => airplane.id == event.airplane);
+    newState.airplanesInQueue.splice(newState.airplanesInQueue.indexOf(airplaneToRemove),1);
+    AirportStateStore.set(newState);
   }
 
 }

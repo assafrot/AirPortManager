@@ -53,9 +53,9 @@ export class NodeGraphRenderer {
     //   this.drawOutlineForNode(node);
     // }
   
-    // if(node.airplane) {
-    //   this.drawAirplaneInNode(node);
-    // }
+     if(node.airplane) {
+       this.drawAirplaneInNode(node);
+     }
   }
 
   drawOutlineForNode(node) {

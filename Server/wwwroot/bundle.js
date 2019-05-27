@@ -173,6 +173,12 @@ var app = (function () {
 		}
 	}
 
+	function get_store_value(store) {
+		let value;
+		store.subscribe(_ => value = _)();
+		return value;
+	}
+
 	function mount_component(component, target, anchor) {
 		const { fragment, on_mount, on_destroy, after_render } = component.$$;
 
@@ -605,9 +611,9 @@ var app = (function () {
 	    //   this.drawOutlineForNode(node);
 	    // }
 	  
-	    // if(node.airplane) {
-	    //   this.drawAirplaneInNode(node);
-	    // }
+	     if(node.airplane) {
+	       this.drawAirplaneInNode(node);
+	     }
 	  }
 
 	  drawOutlineForNode(node) {
@@ -830,7 +836,10 @@ var app = (function () {
 	    connection.start().then(async () => {
 	      let state = await connection.invoke("GetAirportState");
 	      
-	      
+	      connection.on("AirplaneMovedIn", this.onAirplaneMovedIn);
+
+	      connection.on("AirplaneMovedOut", this.onAirplaneMovedOut);
+
 	      let newState = new AirportState();
 
 	      //dummy queue
@@ -870,14 +879,17 @@ var app = (function () {
 	  }
 
 	  convertNodesToClient(serverNodes) {
+
 	    let nodeList = serverNodes.map(node => {
 	      let newNode = new Node(node.x, node.y, node.width, node.height, node.id);
 	      
 	      newNode.isStartPoint = node.startPoint;
 	      newNode.isEndPoint = node.endPoint;
-	      
+	      newNode.airplane = node.flight;
+
 	      return newNode;
 	    });
+
 	    console.log(serverNodes);
 	    
 	    serverNodes.forEach((node,idx) => { 
@@ -913,6 +925,31 @@ var app = (function () {
 	        return "AT_LANDING"
 	        break;
 	    }
+	  }
+
+	  onAirplaneMovedIn(event) {
+	    let newState = get_store_value(AirportStateStore);
+	    newState.graph.nodes[event.station.id-1].airplane = event.airplane;
+	    AirportStateStore.set(newState);
+	  }
+	  
+	  onAirplaneMovedOut(event) {
+	    let newState = get_store_value(AirportStateStore);
+	    newState.graph.nodes[event.station.id-1].airplane = undefined;
+	    AirportStateStore.set(newState);
+	  }
+	  
+	  onAirplaneMovedInToQueue(event) {
+	    let newState = get_store_value(AirportStateStore);
+	    newState.airplanesInQueue.push(event.airplane);
+	    AirportStateStore.set(newState);
+	  }
+	  
+	  onAirplaneMovedOutOfQueue(event) {
+	    let newState = get_store_value(AirportStateStore);
+	    let airplaneToRemove = newState.airplanesInQueue.find(airplane => airplane.id == event.airplane);
+	    newState.airplanesInQueue.splice(newState.airplanesInQueue.indexOf(airplaneToRemove),1);
+	    AirportStateStore.set(newState);
 	  }
 
 	}
