@@ -20,6 +20,7 @@ export class AirportService {
     
     connection.start().then(async () => {
       let state = await connection.invoke("GetAirportState");
+      console.log(state);
       
       connection.on("AirplaneMovedIn", this.onAirplaneMovedIn);
 
@@ -51,7 +52,7 @@ export class AirportService {
 
       let graph = new NodeGraph();
       
-      let nodes = this.convertNodesToClient(state);
+      let nodes = this.convertNodesToClient(state.stations);
       console.log(nodes);
       
       graph.addNodes(nodes);
