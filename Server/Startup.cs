@@ -52,6 +52,7 @@ namespace Server
         .AddTransient<IRouteManager, RouteManager>()
         .AddTransient<IStationServicesBuilder, StationServicesBuilder>()
         .AddTransient<IPhysicalStationBuilder, PhysicalStationBuilder>()
+        .AddTransient<IFlightSimulator, FlightSimulator>()
         .AddTransient<ITimer, Manager.LogicObjects.Timer>()
         .AddTransient<IDBSeederService, DBSeederService>();
     }
