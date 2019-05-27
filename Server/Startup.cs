@@ -38,13 +38,15 @@ namespace Server
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddMvc();  
+      
       services.AddSignalR();
-      services
-          .AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"), ServiceLifetime.Transient)
-          .AddMvc();
+      
+      services.AddDbContext<AirportDbContext>(opts => opts.UseInMemoryDatabase("airportDb"), ServiceLifetime.Transient);
+      
       services.AddTransient<IUnitOfWork, UnitOfWork>()
-             .AddTransient<IDBSeederService, DBSeederService>()
-              .AddTransient<IAirportStateArchiver, AirportStateArchiver>()
+        .AddTransient<IDBSeederService, DBSeederService>()
+        .AddTransient<IAirportStateArchiver, AirportStateArchiver>()
         .AddTransient<IAirportManager, AirportManager>()
         .AddTransient<IAirportStateLoader, AirportStateLoader>()
         .AddTransient<IRouteManager, RouteManager>()

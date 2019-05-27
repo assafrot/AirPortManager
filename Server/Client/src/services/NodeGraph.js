@@ -96,16 +96,19 @@ export class NodeGraph {
 
   generateConnections() {
     let connections = [];
+
     this.nodeConnectionList.forEach(graphConnection => {
       graphConnection.connections.forEach((connection,idx) => {
+        
         let dir = getDir(connection.from, connection.to);
         let offset = this.calcOffset(idx, graphConnection.connections.length);
+        
         connections.push({
-        dir : dir
-        ,offset : offset
-        ,pointFrom : this.getConnectionPoint(connection.from, dir.from, offset)
-        ,pointTo : this.getConnectionPoint(connection.to, dir.to, offset)
-        ,color : this.style.connection.colors[connection.type]
+          dir : dir
+          ,offset : offset
+          ,pointFrom : this.getConnectionPoint(connection.from, dir.from, offset)
+          ,pointTo : this.getConnectionPoint(connection.to, dir.to, offset)
+          ,color : this.style.connection.colors[connection.type]
         })
       })
     })

@@ -13,11 +13,15 @@ export class NodeGraphRenderer {
     this.ctx.clearRect(0, 0, 800, 600);
     this.style = graph.style;
 
-    this.drawConnections(graph);
+    if(graph.connections) {
+      this.drawConnections(graph);
+    }
   
-    graph.nodes.forEach(node => {
-      this.drawNode(node);  
-    })
+    if(graph.nodes) {
+      graph.nodes.forEach(node => {
+        this.drawNode(node);  
+      })
+    }
     
   }
 

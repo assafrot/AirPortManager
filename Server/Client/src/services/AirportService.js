@@ -14,48 +14,55 @@ export class AirportService {
   }
 
   fetchAirportState() {
-    initDummy();
+    //initDummy();
 
     let connection = new signalR.HubConnectionBuilder().withUrl("/airport").configureLogging(signalR.LogLevel.Information).build();
     
     connection.start().then(async () => {
       let state = await connection.invoke("GetAirportState");
       
-      let convertedState = this.convertToClient(state);
       
-      console.log(convertedState);
+      let newState = new AirportState();
+      let graph = new NodeGraph();
       
+      let nodes = this.convertNodesToClient(state);
+      console.log(nodes);
+      
+      graph.addNodes(nodes);
+      newState.graph = graph;
+      AirportStateStore.set(newState);
 
     });
 
   }
 
-  convertToClient(state) {
-    let newState = state.map(node => {
-
-      if(node.nextStations != null) {
-
-        let connections = node.nextStations;
-        delete node.nextStations;
-        
-        node.connections = [];
-        
-        Object.keys(connections).forEach(type => {
-
-          connections[type].forEach(tNode => {
-            node.connections.push({
-              node : tNode,
-              type : type
-            })
+  convertNodesToClient(serverNodes) {
+    let nodeList = serverNodes.map(node => new Node(node.x, node.y, node.width, node.height));
+    console.log(serverNodes);
+    
+    serverNodes.forEach((node,idx) => {    
+      if(node.nextStations) { 
+        Object.keys(node.nextStations).forEach(type => {
+          node.nextStations[type].forEach((tNode,tIdx) => {
+            nodeList[idx].connections.push(new NodeConnection(nodeList[tIdx],this.actionTypeToClient(type)));
           })
-
         })
       }
-      
-      return node;
-    }) 
+    });
+        
 
-    return newState;
+    return nodeList;
+  }
+
+  actionTypeToClient(type) {
+    switch (type) {
+      case "takeoff":
+        return "AT_TAKEOFF"
+      break;
+      case "landing":
+        return "AT_LANDING"
+        break;
+    }
   }
 
 }
