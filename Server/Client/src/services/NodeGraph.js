@@ -12,7 +12,11 @@ export class NodeGraph {
         background : "white"
       },
       node: {
-        color: "lightgrey"
+        colors: {
+          default: "lightgrey",
+          startPoint: "green",
+          endPoint: "Pink"
+        }
       },
       connection:{
         lineWidth: 4,
