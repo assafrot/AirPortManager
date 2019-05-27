@@ -1,4 +1,5 @@
-﻿using DAL.Interfaces;
+﻿using Common.Models;
+using DAL.Interfaces;
 using DAL.Models;
 using Manager.Interfaces;
 using Newtonsoft.Json;
@@ -36,14 +37,32 @@ namespace Server.Services
                     EndPoint = stations[i].EndPoint,
                     StartPoint = stations[i].StartPoint,
                     NextStations = stations[i].NextStations,
+                    NextPhysicalStationsId = new Dictionary<FlightActionType, List<int>>(),
                     Height = 50,
                     Width = 50,
                     X = ((i%3 + 1) * 80),
                     Y = (80) * (yDelta)
                 };
+                foreach (var nextStation in stations[i].NextStations[FlightActionType.Landing])
+                {
+                    if (!physicalStation.NextPhysicalStationsId.ContainsKey(FlightActionType.Landing))
+                    {
+                        physicalStation.NextPhysicalStationsId.Add(FlightActionType.Landing, new List<int>());
+                    }
+                    physicalStation.NextPhysicalStationsId[FlightActionType.Landing].Add(nextStation.Id);
+                }
+                foreach (var nextStation in stations[i].NextStations[FlightActionType.Takeoff])
+                {
+                    if (!physicalStation.NextPhysicalStationsId.ContainsKey(FlightActionType.Takeoff))
+                    {
+                        physicalStation.NextPhysicalStationsId.Add(FlightActionType.Takeoff, new List<int>());
+                    }
+                    physicalStation.NextPhysicalStationsId[FlightActionType.Takeoff].Add(nextStation.Id);
+                }
                 _physicalStations.Add(physicalStation);
             }
             return _physicalStations;
         }
+
     }
 }
